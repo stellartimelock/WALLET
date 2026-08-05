@@ -11,6 +11,10 @@ This repository is the **open-source security and legal reference** for the Stel
 - **Vesting Schedule** — Release funds over time according to a defined schedule
 - **Multi-Asset Support** — Time-lock vaults for Stellar assets beyond native XLM
 
+## Landing Site
+
+- **`landing/`** — static site ready for GitHub Pages (or any static host). See [`landing/README.md`](./landing/README.md) and [`landing/FINDINGS.md`](./landing/FINDINGS.md).
+
 ## Google Play
 
 [Stellar TimeLock Vault on Google Play](https://play.google.com/store/apps/details?id=com.stellartimelock.vault) *(placeholder — update when listing is live)*
