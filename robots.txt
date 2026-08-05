@@ -1,0 +1,11 @@
+# https://github.com/StellarTimeLock/WALLET
+# Public security & legal reference for Stellar TimeLock Vault
+
+User-agent: *
+Allow: /
+
+# Future marketing / product landing page
+Sitemap: https://stellartimelock.com/sitemap.xml
+
+# Prefer the product site for human-facing marketing content
+# Host: https://stellartimelock.com
