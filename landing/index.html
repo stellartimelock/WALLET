@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Stellar TimeLock Vault — Non-Custodial Time-Lock Wallets on Stellar</title>
+  <meta name="description" content="Stellar TimeLock Vault is a non-custodial Stellar wallet with Time-Lock vaults, Cooling-Off locks, Vesting schedules, Multi-Asset support, and on-device Swap. Your keys never leave your device." />
+  <meta name="keywords" content="Stellar TimeLock Vault, Stellar wallet, time-lock vault, cooling-off, vesting, multi-asset, Soroban, non-custodial, self-custody, XLM" />
+  <meta name="author" content="StellarTimeLock, LLC" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#05070d" />
+
+  <meta property="og:title" content="Stellar TimeLock Vault — Lock XLM Until the Future Arrives" />
+  <meta property="og:description" content="Non-custodial Time-Lock vaults, Cooling-Off, Vesting, Multi-Asset, and Swap on Stellar. No custody. No admin. Your keys, your device." />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta property="og:image:alt" content="Stellar TimeLock Vault hourglass logo" />
+  <meta property="og:url" content="https://stellartimelock.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Stellar TimeLock Vault" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@stellartimelock" />
+  <meta name="twitter:title" content="Stellar TimeLock Vault — Non-Custodial Time-Lock Wallets" />
+  <meta name="twitter:description" content="Time-Lock vaults, Cooling-Off, Vesting, Multi-Asset, and Swap on Stellar. Your keys never leave your device." />
+  <meta name="twitter:image" content="assets/logo.png" />
+
+  <link rel="canonical" href="https://stellartimelock.com/" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="stylesheet" href="assets/style.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Stellar TimeLock Vault",
+        "operatingSystem": "Android",
+        "applicationCategory": "FinanceApplication",
+        "description": "Non-custodial Stellar wallet with Time-Lock vaults, Cooling-Off locks, Vesting schedules, Multi-Asset support, and on-device Swap.",
+        "url": "https://stellartimelock.com",
+        "publisher": {
+          "@type": "Organization",
+          "name": "StellarTimeLock, LLC",
+          "url": "https://stellartimelock.com"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this a custodial wallet?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Stellar TimeLock Vault is non-custodial. Private keys never leave your device. We never hold user funds, keys, or signing authority."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do Time-Lock vaults work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Time-Lock Vaults are enforced by a Soroban smart contract on Stellar. There is no admin key and no emergency exit — what you lock stays locked until the unlock timestamp you chose."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is Cooling-Off?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Cooling-Off vaults require a withdrawal notice first. Start a withdrawal, wait out the cooling-off period, and cancel any time if it wasn't you."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Will this website ever ask for my seed phrase?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Never. This is an informational landing page. StellarTimeLock, LLC will never ask for your secret seed or recovery phrase on this website. Keep your keys in the app, on your device."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where can I audit the contracts?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Open-source security modules and Soroban contracts are public under Apache 2.0. Issues, pull requests, and responsible disclosures are welcome."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-brand-bar">
+    <a class="brand" href="./" aria-label="Stellar TimeLock Vault home">
+      <img src="assets/logo.png" alt="" class="brand-logo" />
+      <span class="brand-name">Stellar TimeLock Vault</span>
+    </a>
+  </div>
+  <div class="nav-links-bar">
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#security">Security</a>
+      <a href="#faq">FAQ</a>
+      <a
+        href="https://github.com/StellarTimeLock/stellartimelock-core"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-link-github"
+      >
+        <svg
+          class="nav-link-github-icon"
+          viewBox="0 0 24 24"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            fill="currentColor"
+            d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.06-.72.08-.7.08-.7 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.72 1.27 3.38.97.11-.75.41-1.27.75-1.56-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"
+          />
+        </svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <img src="assets/logo.png" alt="Stellar TimeLock Vault hourglass logo" class="hero-logo" />
+    <h1 class="title">
+      <span id="typed-title" aria-live="polite">Stellar TimeLock Vault</span><span class="cursor" id="cursor">▋</span>
+    </h1>
+    <p class="tagline" id="tagline">Lock XLM until the future arrives.</p>
+
+    <p class="lede">
+      <strong>Coming to Google Play.</strong> A non-custodial Stellar wallet with
+      Time-Lock vaults, Cooling-Off locks, Vesting schedules, Multi-Asset support,
+      and on-device Swap — enforced by Soroban smart contracts.
+      <br /><strong>No custody. No admin. No backdoor. Your keys, your device.</strong>
+    </p>
+
+    <div class="cta-row">
+      <!-- PLACEHOLDER: replace with live Play Store URL when published -->
+      <a class="cta cta-primary" href="https://play.google.com/store/apps/details?id=com.stellartimelock.app" rel="noopener">
+        <svg class="cta-store-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path fill="currentColor" d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.257 1.287a1 1 0 0 1 0 1.745l-2.257 1.287-2.528-2.528 2.528-2.791zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+        </svg>
+        Get it on Google Play
+      </a>
+      <a class="cta cta-ghost" href="https://github.com/StellarTimeLock/stellartimelock-core" target="_blank" rel="noopener noreferrer">
+        Audit the contracts →
+      </a>
+    </div>
+  </section>
+
+  <section id="features" class="features">
+    <h2 class="section-title">Vault features, first.</h2>
+    <p class="section-lede">
+      Self-custody tools built for Stellar — lock, vest, cool off, and move assets
+      without handing keys to anyone.
+      <br /><strong>Your keys never leave the device.</strong>
+    </p>
+    <ul class="feature-grid">
+      <li class="feature">
+        <div class="feature-icon">🔒</div>
+        <h3>Time-Lock vaults</h3>
+        <p>Lock XLM or Stellar tokens until a timestamp you choose. Enforced on-chain by Soroban — no admin key, no emergency exit.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">❄️</div>
+        <h3>Cooling-Off</h3>
+        <p>Withdrawals need a heads-up first. Start a withdrawal, wait out the cooling-off period, and cancel anytime if it wasn't you.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">📈</div>
+        <h3>Vesting</h3>
+        <p>Funds unlock in discrete steps — daily, weekly, or monthly. Set an interval, optional start date, and withdraw each chunk as it vests.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">💎</div>
+        <h3>Multi-Asset</h3>
+        <p>Time-lock XLM or any Stellar asset with a trust line. Same vault model, broader asset support on Mainnet.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">🔄</div>
+        <h3>Swap</h3>
+        <p>Send, receive, and swap crypto with transactions signed natively on-device — never by a remote server.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">👛</div>
+        <h3>On-device wallet</h3>
+        <p>Generate or import a Stellar seed. Multi-wallet support and an address book — all bound to your device keystore.</p>
+      </li>
+    </ul>
+
+    <h2 class="section-title section-title-secondary">Built for self-custody.</h2>
+    <p class="section-lede">
+      Hardware-backed secrets, biometric unlock, and open contracts you can inspect.
+    </p>
+    <ul class="feature-grid">
+      <li class="feature">
+        <div class="feature-icon">🛡️</div>
+        <h3>Non-custodial by design</h3>
+        <p>We never hold user funds, keys, or signing authority. Private keys never leave the device.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">🔐</div>
+        <h3>Hardware-bound secrets</h3>
+        <p>Android Keystore binds secrets to hardware with biometric authentication at unlock.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">📜</div>
+        <h3>Open contracts</h3>
+        <p>Soroban vault logic and security modules are public under Apache 2.0. Read them. Audit them. File a PR.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="security" class="security security-bar">
+    <div class="security-inner">
+      <div class="security-header">
+        <span class="security-eyebrow">SECURITY</span>
+        <h2 class="section-title security-title">Security you can inspect</h2>
+        <p class="security-copy">
+          Stellar TimeLock Vault is a non-custodial wallet. The cryptography and
+          contracts that protect your funds are open source under Apache 2.0.
+          Read them. Audit them. File a PR.
+        </p>
+      </div>
+      <ul class="security-list">
+        <li>Private keys never leave the device</li>
+        <li>No custody. No admin. No backdoor. Your keys, your device.</li>
+        <li>Android Keystore binds secrets to hardware with biometric unlock</li>
+        <li>Time-Lock Vaults enforced by Soroban — no admin key, no emergency exit</li>
+        <li>One biometric prompt per session cache</li>
+        <li>Best-effort memory zeroing after cryptographic operations</li>
+        <li><code>allowBackup="false"</code> on Android — no accidental cloud copies of secrets</li>
+      </ul>
+      <a class="cta cta-primary security-cta" href="https://github.com/StellarTimeLock/stellartimelock-core" target="_blank" rel="noopener noreferrer">
+        Read the source →
+      </a>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <div class="faq-inner">
+      <h2 class="section-title faq-title">Frequently asked questions</h2>
+
+      <details class="faq-item">
+        <summary>
+          <span>Is this a custodial wallet?</span>
+          <span class="faq-chev" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-body">
+          <p>
+            No. Stellar TimeLock Vault is non-custodial. Private keys never leave
+            your device. StellarTimeLock, LLC never holds user funds, keys, or
+            signing authority.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>How do Time-Lock vaults work?</span>
+          <span class="faq-chev" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-body">
+          <p>
+            Time-Lock Vaults are enforced by a Soroban smart contract on Stellar.
+            There is no admin key and no emergency exit — what you lock stays
+            locked until the unlock timestamp you chose.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>What is Cooling-Off?</span>
+          <span class="faq-chev" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-body">
+          <p>
+            Cooling-Off vaults require a withdrawal notice first. Start a
+            withdrawal, wait out the cooling-off period, and cancel any time if
+            it wasn't you — a delay that helps stop impulsive or unauthorized exits.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>Will this website ever ask for my seed phrase?</span>
+          <span class="faq-chev" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-body">
+          <p>
+            Never. This is an informational landing page for our mobile app.
+            StellarTimeLock, LLC will never ask for your secret seed or recovery
+            phrase on this website. Keep your keys in the app, on your device.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>Where can I audit the code?</span>
+          <span class="faq-chev" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-body">
+          <p>
+            Open-source security modules and Soroban contracts are public under
+            Apache 2.0 in
+            <a href="https://github.com/StellarTimeLock/stellartimelock-core" target="_blank" rel="noopener noreferrer">stellartimelock-core</a>.
+            Issues, pull requests, and responsible disclosures are welcome at
+            security@stellartimelock.com.
+          </p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="pricing" class="pricing">
+    <div class="pricing-inner">
+      <span class="pricing-eyebrow">GET THE APP</span>
+      <h2 class="section-title pricing-title">Coming to Google Play</h2>
+      <p class="pricing-lede">
+        Stellar TimeLock Vault brings Time-Lock vaults, Cooling-Off, Vesting,
+        Multi-Asset, and Swap to Android — free to download, non-custodial by design.
+      </p>
+      <ul class="pricing-list">
+        <li>
+          <span class="pricing-check">✓</span>
+          <span>Time-Lock vaults on Soroban</span>
+        </li>
+        <li>
+          <span class="pricing-check">✓</span>
+          <span>Cooling-Off &amp; Vesting schedules</span>
+        </li>
+        <li>
+          <span class="pricing-check">✓</span>
+          <span>Multi-Asset lock support</span>
+        </li>
+        <li>
+          <span class="pricing-check">✓</span>
+          <span>On-device send, receive &amp; swap</span>
+        </li>
+        <li>
+          <span class="pricing-check">✓</span>
+          <span>Keys never leave your device</span>
+        </li>
+        <li>
+          <span class="pricing-check">✓</span>
+          <span>No custody, no ads, no data selling</span>
+        </li>
+      </ul>
+      <a class="cta cta-primary pricing-cta" href="https://play.google.com/store/apps/details?id=com.stellartimelock.app" rel="noopener">
+        Get it on Google Play →
+      </a>
+    </div>
+  </section>
+
+  <div class="banners">
+    <div class="security-banner">
+      <svg class="security-banner-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+        <path fill="currentColor" d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+      </svg>
+      <p class="security-banner-text">
+        <strong class="security-banner-title">PRIVACY NOTICE: </strong>
+        This is an informational landing page for our mobile app.
+        StellarTimeLock, LLC will NEVER ask for your secret seed or recovery phrase on this website.
+        Keep your keys in the app, on your device.
+      </p>
+    </div>
+
+    <div class="authenticity-banner">
+      <svg class="authenticity-banner-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+        <path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+      </svg>
+      <div class="authenticity-content">
+        <p class="authenticity-title">Verify Our Authenticity:</p>
+        <p class="authenticity-item">✅ Google Play Store listing — Coming Soon (placeholder link above)</p>
+        <p class="authenticity-item">✅ GitHub: github.com/StellarTimeLock/stellartimelock-core</p>
+        <p class="authenticity-item">✅ Official Domain: stellartimelock.com</p>
+        <p class="authenticity-item">✅ LLC Registered: StellarTimeLock, LLC</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <nav class="footer-social" aria-label="Social">
+        <a class="footer-link-btn" href="https://github.com/StellarTimeLock/stellartimelock-core" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="footer-link-btn" href="https://twitter.com/stellartimelock" target="_blank" rel="noopener noreferrer">Twitter/X</a>
+        <a class="footer-link-btn" href="mailto:stellartimelock@gmail.com">Email</a>
+      </nav>
+
+      <nav class="footer-legal-links" aria-label="Legal">
+        <a class="footer-link-btn" href="privacy/">Privacy Policy</a>
+        <a class="footer-link-btn" href="terms/">Terms of Use</a>
+        <a class="footer-link-btn" href="disclosures/">Disclosures</a>
+      </nav>
+
+      <p class="footer-tagline">Stellar TimeLock Vault — Non-custodial time-lock wallets on Stellar.</p>
+
+      <p class="footer-copyright">
+        &copy; 2026 StellarTimeLock, LLC.
+      </p>
+    </div>
+  </footer>
+
+</main>
+
+<script src="assets/main.js" defer></script>
+</body>
+</html>
