@@ -1,4 +1,4 @@
-# Stellar TimeLock Vault — Landing
+# Stellar TimeLock — Landing
 
 Static marketing site for the wallet-only product. Visual identity extracted from `stellartimelock-web` (StellarOS-era); content rewritten for Time-Lock Vaults.
 
@@ -28,6 +28,6 @@ Or open `landing/index.html` via any static server.
 
 ## Branding
 
-- Product: **Stellar TimeLock Vault**
+- Product: **Stellar TimeLock**
 - Entity: **StellarTimeLock, LLC**
 - See `FINDINGS.md` for full extraction notes.

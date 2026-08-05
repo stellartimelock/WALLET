@@ -116,7 +116,7 @@ Pulled from:
 - `SECURITY.md` (app) — non-custodial, keys never leave device, biometric / Keystore
 - `settings.tsx` — “Your secret seed never leave this device”
 
-Product name used: **Stellar TimeLock Vault**  
+Product name used: **Stellar TimeLock**  
 Entity: **StellarTimeLock, LLC**  
 Features featured: Time-Lock vaults, Cooling-Off, Vesting, Multi-Asset, Swap (+ on-device wallet)
 
@@ -130,7 +130,7 @@ Under `~/wallet-public/landing/`:
 |------|-------|
 | `index.html` | Wallet-only landing |
 | `assets/style.css` | Same visual system (comment updated) |
-| `assets/main.js` | Typewriter for “Stellar TimeLock Vault” only |
+| `assets/main.js` | Typewriter for “Stellar TimeLock” only |
 | `assets/logo.png` | Copied from stellartimelock-web (not modified at source) |
 | `privacy/index.html` | Wallet-focused privacy |
 | `terms/index.html` | Wallet-focused terms |
