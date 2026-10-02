@@ -20,6 +20,14 @@ Or open `landing/index.html` via any static server.
 3. Optional: keep `CNAME` as `stellartimelock.com` and point DNS accordingly.
 4. `.nojekyll` is included so GitHub Pages serves files as-is.
 
+## Survey
+
+`/survey/` is a static quiz (`survey/index.html`), same GitHub Pages folder as the rest of the site.
+
+Email has no backend. The only value to paste is `SURVEY_ACCESS_KEY` in `assets/survey.js`.
+
+TODO: create a Web3Forms access key for isaacdschuster@gmail.com at https://web3forms.com and paste it there. Until then, the form posts through FormSubmit to that address (confirm FormSubmit's one-time activation email). A visitor who enters an email gets a copy of their results. See the comment above `SURVEY_ACCESS_KEY`.
+
 ## Store listing
 
 - Google Play: `https://play.google.com/store/apps/details?id=com.stellartimelock`

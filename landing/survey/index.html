@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Which of my apps fit you? — Stellar TimeLock</title>
+  <meta name="description" content="A short quiz to see which apps fit you. Answers are only used to recommend apps. No tracking, no ads." />
+  <meta name="theme-color" content="#05070d" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stellartimelock.com/survey/" />
+  <link rel="icon" type="image/png" href="../assets/logo.png" />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="nav-brand-bar">
+    <a class="brand" href="../" aria-label="Stellar TimeLock home">
+      <img src="../assets/logo.png" alt="" class="brand-logo" />
+      <span class="brand-name">Stellar TimeLock</span>
+    </a>
+  </div>
+</header>
+
+<main class="survey" id="survey">
+  <section id="survey-quiz">
+    <p class="survey-kicker">Ten quick questions</p>
+    <h1 tabindex="-1">Which of my apps fit you?</h1>
+    <p class="survey-lede">
+      One question at a time. A few follow-ups only show up if an answer calls for them.
+    </p>
+
+    <div
+      class="survey-progress"
+      id="survey-progress"
+      role="progressbar"
+      aria-valuemin="1"
+      aria-valuemax="10"
+      aria-valuenow="1"
+      aria-valuetext="Question 1 of 10"
+    >
+      <span class="survey-progress-fill" id="survey-progress-fill"></span>
+    </div>
+    <p class="survey-step" id="survey-step">Question 1 of 10</p>
+
+    <div class="survey-card" id="survey-card"></div>
+    <button type="button" class="survey-back" id="survey-back" hidden>Back</button>
+  </section>
+
+  <section id="survey-results" hidden>
+    <p class="survey-kicker">Your matches</p>
+    <h1 id="survey-results-title" tabindex="-1">Apps for you</h1>
+    <p class="survey-results-lede" id="survey-results-lede"></p>
+    <ul class="survey-apps" id="survey-app-list"></ul>
+
+    <!-- Access key: landing/assets/survey.js → SURVEY_ACCESS_KEY -->
+    <form id="survey-form" class="survey-form" action="#" method="post" novalidate>
+      <label for="survey-email">Email me my results</label>
+      <input
+        class="survey-email"
+        id="survey-email"
+        name="email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        maxlength="200"
+        placeholder="you@email.com"
+      />
+      <p class="survey-mail-hint" id="survey-mail-hint">
+        Optional. Isaac gets your answers and this list. Add your email if you want a copy too.
+      </p>
+      <button class="cta cta-primary survey-submit" id="survey-submit" type="submit">
+        Email me my results
+      </button>
+      <p class="survey-mail-status" id="survey-mail-status" role="status" aria-live="polite"></p>
+      <div class="survey-hp" aria-hidden="true">
+        <label for="survey-honey">Company</label>
+        <input id="survey-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" />
+      </div>
+    </form>
+    <p class="survey-sent" id="survey-sent" hidden></p>
+    <button type="button" class="survey-retake" id="survey-retake">Retake the quiz</button>
+  </section>
+
+  <p class="survey-privacy">
+    <strong>Privacy: </strong>
+    Your answers are only used to recommend apps. No tracking. No ads.
+    They stay on this device unless you choose to email them.
+  </p>
+
+  <noscript>
+    <p class="survey-lede">This quiz runs in your browser and needs JavaScript. It still doesn't track you.</p>
+  </noscript>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <nav class="footer-legal-links" aria-label="Site">
+      <a class="footer-link-btn" href="../">Home</a>
+      <a class="footer-link-btn" href="../privacy/">Privacy Policy</a>
+    </nav>
+    <p class="footer-copyright">&copy; 2026 StellarTimeLock, LLC.</p>
+  </div>
+</footer>
+
+<script src="../assets/survey.js" defer></script>
+</body>
+</html>
