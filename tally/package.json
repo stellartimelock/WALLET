@@ -1,0 +1,22 @@
+{
+  "name": "stellartimelock-tally",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared two-person tally for the Stellar TimeLock site. Built into landing/t/.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.js",
+    "build": "node esbuild.mjs"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@noble/ciphers": "^2.4.0",
+    "@noble/curves": "^2.4.0",
+    "@noble/hashes": "^2.2.0",
+    "@stellar/freighter-api": "^6.0.1",
+    "@stellar/stellar-base": "^15.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}
