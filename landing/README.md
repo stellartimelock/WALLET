@@ -37,3 +37,11 @@ TODO: create a Web3Forms access key for isaacdschuster@gmail.com at https://web3
 
 - Product: **Stellar TimeLock**
 - Entity: **StellarTimeLock, LLC**
+
+## Shared tally
+
+Unlisted page, not linked from the marketing site: https://stellartimelock.com/t/hhkbu88gx5i4/
+
+Edit [`t/hhkbu88gx5i4/config.js`](./t/hhkbu88gx5i4/config.js) and set both Stellar public keys (`people[0]` is Isaac, `people[1]` is the buddy). Do not put secret keys or a GitHub token in that file. Storage defaults to Stellar `manageData` on `dataAccount` (both keys as signers, threshold 1). A private GitHub Gist is the fallback, with the token kept in the browser. See the root README for the signer and sign-in notes.
+
+Source and tests live in `tally/`. Rebuild the page script with `npm test && npm run build` from that directory.
