@@ -339,16 +339,31 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .nav-brand-bar.tally-bar {
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     text-align: center;
+    row-gap: 8px;
+  }
+  .tally-bar .brand {
+    flex: 0 1 auto;
+    max-width: 100%;
   }
   .tally-who {
+    flex: 1 1 100%;
     width: 100%;
+    min-width: 0;
     justify-content: center;
   }
+  .tally-who .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 640px) {
   .item-top,
   .panel-head {
     align-items: flex-start;
