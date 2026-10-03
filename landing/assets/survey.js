@@ -21,6 +21,7 @@
 var SURVEY_ACCESS_KEY = "";
 
 (function () {
+  var model = window.SurveyModel;
   var NOTIFY_EMAIL = "isaacdschuster@gmail.com";
   var STORAGE_KEY = "stl-survey-results";
   var PLACEHOLDER_KEYS = {
@@ -29,218 +30,6 @@ var SURVEY_ACCESS_KEY = "";
     "YOUR_ACCESS_KEY": true,
     "YOUR_ACCESS_KEY_HERE": true
   };
-
-  var APPS = {
-    timelock: {
-      name: "Stellar TimeLock",
-      description: "A non-custodial Stellar wallet with time-lock vaults. Your keys stay on your device.",
-      href: "https://play.google.com/store/apps/details?id=com.stellartimelock",
-      linkLabel: "Google Play"
-    },
-    funnymoney: {
-      name: "Funny Money",
-      description: "For people who are curious about cryptocurrency and Stellar.",
-      href: null
-    },
-    lostcontext: {
-      name: "Lost Context",
-      description: "For people who use X and lose the thread.",
-      href: null
-    },
-    naturally: {
-      name: "Naturally",
-      description: "For camping, road trips, van or car living, and hot springs.",
-      href: null
-    },
-    delivery: {
-      name: "Delivery Driver",
-      description: "A mileage tracker for delivery and gig driving.",
-      href: null
-    },
-    vault: {
-      name: "Stellar Vault",
-      description: "A private password manager.",
-      href: null
-    },
-    os: {
-      name: "Stellar OS",
-      description: "A private, ad-free place for your phone, notes, and files.",
-      href: null
-    },
-    text: {
-      name: "AI Text Manager",
-      description: "For people who text a lot or use AI chatbots.",
-      href: null
-    },
-    pets: {
-      name: "Stellar Pets",
-      description: "For people who have pets.",
-      href: null
-    },
-    match: {
-      name: "Matchmaker",
-      description: "For when you're single and looking to meet someone.",
-      href: null
-    },
-    sourceify: {
-      name: "Sourceify",
-      description: "Help finding shelter, food, and services — or helping someone else find them.",
-      href: null
-    },
-    treesaver: {
-      name: "Tree Saver 5000",
-      description: "For grocery shopping and keeping receipts.",
-      href: null
-    },
-    send: {
-      name: "Stellar Send",
-      description: "Send files between your devices.",
-      href: null
-    },
-    browse: {
-      name: "Stellar Browse",
-      description: "Private browsing, without the ads.",
-      href: null
-    },
-    roadside: {
-      name: "Roadside Mechanic",
-      description: "Help when the car is in trouble.",
-      href: null
-    }
-  };
-
-  function yesNo(yesLabel, noLabel, yesApps) {
-    return [
-      { label: yesLabel, value: "yes", match: true, apps: yesApps },
-      { label: noLabel, value: "no", match: false, apps: [] }
-    ];
-  }
-
-  var CORE = [
-    {
-      id: "crypto",
-      short: "Cryptocurrency or Stellar/XLM",
-      prompt: "Are you interested in cryptocurrency, or in Stellar and XLM?",
-      options: yesNo("Yes", "Not really", ["timelock", "funnymoney"])
-    },
-    {
-      id: "twitter",
-      short: "Uses X (Twitter)",
-      prompt: "Do you use X (Twitter)?",
-      options: [
-        { label: "Yes", value: "yes", match: true, apps: ["lostcontext"] },
-        { label: "Sometimes", value: "sometimes", match: true, apps: ["lostcontext"] },
-        { label: "No", value: "no", match: false, apps: [] }
-      ]
-    },
-    {
-      id: "outdoors",
-      short: "Camping, road trips, van or car living, or hot springs",
-      prompt: "Do you go camping, take road trips, live in a van or car, or visit hot springs?",
-      options: [
-        { label: "Yes", value: "yes", match: true, apps: ["naturally"] },
-        { label: "Sometimes", value: "sometimes", match: true, apps: ["naturally"] },
-        { label: "Not really", value: "no", match: false, apps: [] }
-      ]
-    },
-    {
-      id: "delivery",
-      short: "Delivery or gig driving",
-      prompt: "Do you do delivery or gig driving?",
-      options: yesNo("Yes", "Not right now", ["delivery"])
-    },
-    {
-      id: "passwords",
-      short: "Private password manager",
-      prompt: "Do you want a private password manager?",
-      options: yesNo("Yes", "I'm good", ["vault"])
-    },
-    {
-      id: "phone",
-      short: "Private ad-free phone, notes, and files",
-      prompt: "Do you want a private, ad-free phone setup, with notes and files in one place?",
-      options: yesNo("Yes", "Not really", ["os"])
-    },
-    {
-      id: "texting",
-      short: "Texting or AI chatbots",
-      prompt: "Do you text a lot, or use AI chatbots?",
-      options: [
-        { label: "I text a lot", value: "texting", match: true, apps: ["text"] },
-        { label: "I use AI chatbots", value: "chatbots", match: true, apps: ["text"] },
-        { label: "Both", value: "both", match: true, apps: ["text"] },
-        { label: "Neither", value: "neither", match: false, apps: [] }
-      ]
-    },
-    {
-      id: "pets",
-      short: "Pets",
-      prompt: "Do you have pets?",
-      options: yesNo("Yes", "No", ["pets"])
-    },
-    {
-      id: "dating",
-      short: "Single and looking",
-      prompt: "Are you single and looking?",
-      options: yesNo("Yes", "No", ["match"])
-    },
-    {
-      id: "help",
-      short: "Shelter, food, or services",
-      prompt: "Do you need help finding shelter, food, or services — or do you help others who do?",
-      options: [
-        { label: "I need that help", value: "need", match: true, apps: ["sourceify"] },
-        { label: "I help others find it", value: "help", match: true, apps: ["sourceify"] },
-        { label: "Both", value: "both", match: true, apps: ["sourceify"] },
-        { label: "Neither", value: "neither", match: false, apps: [] }
-      ]
-    }
-  ];
-
-  var FOLLOW = [
-    {
-      id: "roadside",
-      short: "Car trouble",
-      prompt: "Does car trouble come up — breakdowns, warning lights, or getting stranded?",
-      options: yesNo("Yes", "Not really", ["roadside"]),
-      anchor: function (answers) {
-        if (isYes(answers.delivery)) return "delivery";
-        if (isYes(answers.outdoors)) return "outdoors";
-        return null;
-      }
-    },
-    {
-      id: "groceries",
-      short: "Groceries or receipts",
-      prompt: "Do you shop for groceries, or want to keep receipts?",
-      options: yesNo("Yes", "Not really", ["treesaver"]),
-      anchor: function (answers) {
-        if (isYes(answers.delivery)) return "delivery";
-        if (isYes(answers.outdoors)) return "outdoors";
-        return null;
-      }
-    },
-    {
-      id: "send",
-      short: "Send files between devices",
-      prompt: "Want to send files between your devices?",
-      options: yesNo("Yes", "No", ["send"]),
-      anchor: function (answers) {
-        return isYes(answers.phone) ? "phone" : null;
-      }
-    },
-    {
-      id: "browse",
-      short: "Private browsing",
-      prompt: "Want private browsing, without ads following you?",
-      options: yesNo("Yes", "No", ["browse"]),
-      anchor: function (answers) {
-        if (isYes(answers.phone)) return "phone";
-        if (isYes(answers.passwords)) return "passwords";
-        return null;
-      }
-    }
-  ];
 
   var quizEl = document.getElementById("survey-quiz");
   var resultsEl = document.getElementById("survey-results");
@@ -259,100 +48,21 @@ var SURVEY_ACCESS_KEY = "";
   var retakeBtn = document.getElementById("survey-retake");
   var sentEl = document.getElementById("survey-sent");
 
-  if (!quizEl || !resultsEl || !cardEl || !formEl) return;
+  if (!model || !quizEl || !resultsEl || !cardEl || !formEl) return;
 
-  var answers = {};
-  var queue = [];
-  var step = 0;
+  var session = model.createSession();
   var currentRecord = null;
   var pickLocked = false;
 
-  function isYes(answer) {
-    return !!(answer && answer.match);
-  }
-
-  function queueFrom(source) {
-    var next = [];
-    CORE.forEach(function (question) {
-      next.push(question);
-      FOLLOW.forEach(function (follow) {
-        if (follow.anchor(source) === question.id) next.push(follow);
-      });
-    });
-    return next;
-  }
-
-  function indexOfId(list, id) {
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].id === id) return i;
-    }
-    return -1;
-  }
-
-  function prune(list) {
-    var keep = {};
-    list.forEach(function (question) { keep[question.id] = true; });
-    Object.keys(answers).forEach(function (id) {
-      if (!keep[id]) delete answers[id];
-    });
-  }
-
-  function recommendedIds(source) {
-    var list = queueFrom(source);
-    var seen = {};
-    var ids = [];
-    list.forEach(function (question) {
-      var answer = source[question.id];
-      if (!answer) return;
-      var chosen = null;
-      for (var i = 0; i < question.options.length; i++) {
-        if (question.options[i].value === answer.value) chosen = question.options[i];
-      }
-      if (!chosen) return;
-      (chosen.apps || []).forEach(function (id) {
-        if (seen[id] || !APPS[id]) return;
-        seen[id] = true;
-        ids.push(id);
-      });
-    });
-    return ids;
-  }
-
-  function knownAppIds(ids) {
-    var clean = [];
-    (ids || []).forEach(function (id) {
-      if (APPS[id] && clean.indexOf(id) === -1) clean.push(id);
-    });
-    return clean;
-  }
-
-  function appsBlock(ids) {
-    if (!ids.length) return "None — no apps matched.";
-    return ids.map(function (id) {
-      var app = APPS[id];
-      var where = app.href ? app.href : "coming soon";
-      return app.name + " — " + app.description + " (" + where + ")";
-    }).join("\n");
-  }
-
-  function answersBlock(source) {
-    return queueFrom(source).map(function (question) {
-      var answer = source[question.id];
-      return question.short + ": " + (answer ? answer.label : "(skipped)");
-    }).filter(function (line) {
-      return line.indexOf("(skipped)") === -1;
-    }).join("\n");
-  }
-
-  function visitorCopy(ids, source, email) {
+  function visitorCopy(ids, source, questionIds, email) {
     return [
       "Here are the apps that fit you, from stellartimelock.com/survey.",
       "",
       "Apps for you:",
-      appsBlock(ids),
+      model.appsBlock(ids),
       "",
       "Your answers:",
-      answersBlock(source),
+      model.answersBlock(source, questionIds),
       "",
       "Answers are only used to recommend apps. No tracking. No ads.",
       "This copy was sent to " + email + " because you asked for your results."
@@ -396,7 +106,8 @@ var SURVEY_ACCESS_KEY = "";
       if (!raw) return null;
       var data = JSON.parse(raw);
       if (!data || data.version !== 1 || !data.answers || typeof data.answers !== "object") return null;
-      data.appIds = knownAppIds(data.appIds);
+      data.appIds = model.normalizeAppIds(data.appIds);
+      if (!Array.isArray(data.questionIds)) data.questionIds = [];
       if (typeof data.email !== "string") data.email = "";
       return data;
     } catch (err) {
@@ -417,11 +128,12 @@ var SURVEY_ACCESS_KEY = "";
   }
 
   function renderQuestion(shouldFocus) {
-    var question = queue[step];
+    var question = session.current();
     if (!question) return;
-    var total = queue.length;
+    var total = session.queueIds().length;
+    var step = session.getStep();
     var current = step + 1;
-    var prior = answers[question.id];
+    var prior = session.getAnswers()[question.id];
 
     stepEl.textContent = "Question " + current + " of " + total;
     progressEl.setAttribute("aria-valuemin", "1");
@@ -471,30 +183,21 @@ var SURVEY_ACCESS_KEY = "";
   }
 
   function choose(option) {
-    var question = queue[step];
-    answers[question.id] = {
-      value: option.value,
-      label: option.label,
-      match: !!option.match
-    };
-    queue = queueFrom(answers);
-    prune(queue);
-    var idx = indexOfId(queue, question.id);
-    if (idx < 0) idx = step;
-    if (idx + 1 >= queue.length) {
+    var result = session.choose(option.value);
+    if (result.done) {
       finish();
       return;
     }
-    step = idx + 1;
     renderQuestion(true);
   }
 
   function finish() {
-    var ids = recommendedIds(answers);
+    var answers = session.getAnswers();
     currentRecord = {
       version: 1,
       answers: answers,
-      appIds: ids,
+      appIds: session.appIds(),
+      questionIds: session.queueIds(),
       email: "",
       completedAt: new Date().toISOString(),
       mailedAt: null
@@ -505,7 +208,6 @@ var SURVEY_ACCESS_KEY = "";
 
   function showResults(record, returning) {
     currentRecord = record;
-    answers = record.answers || {};
     quizEl.hidden = true;
     resultsEl.hidden = false;
     renderApps(record.appIds);
@@ -537,46 +239,83 @@ var SURVEY_ACCESS_KEY = "";
     appListEl.innerHTML = "";
     if (!ids.length) return;
     ids.forEach(function (id) {
-      var app = APPS[id];
+      var app = model.APPS[id];
+      if (!app) return;
       var item = document.createElement("li");
       item.className = "survey-app";
 
+      var head = document.createElement("div");
+      head.className = "survey-app-head";
+
+      var icon = document.createElement("img");
+      icon.className = "survey-app-icon";
+      icon.src = "../assets/app-icons/" + app.icon;
+      icon.alt = "";
+      icon.width = 56;
+      icon.height = 56;
+      head.appendChild(icon);
+
+      var titleWrap = document.createElement("div");
+      titleWrap.className = "survey-app-title";
+
       var title = document.createElement("h2");
       title.className = "survey-app-name";
-      if (app.href) {
-        var link = document.createElement("a");
-        link.href = app.href;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.textContent = app.name;
-        title.appendChild(link);
-      } else {
-        title.textContent = app.name;
+      title.textContent = app.name;
+      titleWrap.appendChild(title);
+
+      var playUrl = model.storeUrl(app.playUrl);
+      var iosUrl = model.storeUrl(app.iosUrl);
+      if (!playUrl && !iosUrl) {
         title.setAttribute("aria-label", app.name + ", coming soon");
         var badge = document.createElement("span");
         badge.className = "survey-badge";
         badge.textContent = "Coming soon";
-        title.appendChild(badge);
+        titleWrap.appendChild(badge);
       }
 
-      var copy = document.createElement("p");
-      copy.textContent = app.description;
+      head.appendChild(titleWrap);
+      item.appendChild(head);
 
-      item.appendChild(title);
+      var copy = document.createElement("p");
+      copy.className = "survey-app-desc";
+      copy.textContent = app.description;
       item.appendChild(copy);
 
-      if (app.href) {
-        var outbound = document.createElement("a");
-        outbound.className = "survey-app-link";
-        outbound.href = app.href;
-        outbound.target = "_blank";
-        outbound.rel = "noopener noreferrer";
-        outbound.textContent = app.linkLabel || "Open";
-        item.appendChild(outbound);
+      if (app.replaces && app.replaces.length) {
+        var replaces = document.createElement("p");
+        replaces.className = "survey-replaces";
+        var label = document.createElement("span");
+        label.className = "survey-replaces-label";
+        label.textContent = "Replaces:";
+        replaces.appendChild(label);
+        app.replaces.forEach(function (name) {
+          var chip = document.createElement("span");
+          chip.className = "survey-chip";
+          chip.textContent = name;
+          replaces.appendChild(chip);
+        });
+        item.appendChild(replaces);
+      }
+
+      if (playUrl) {
+        item.appendChild(storeLink(playUrl, "Get it on Google Play"));
+      }
+      if (iosUrl) {
+        item.appendChild(storeLink(iosUrl, "Get it on the App Store"));
       }
 
       appListEl.appendChild(item);
     });
+  }
+
+  function storeLink(href, label) {
+    var link = document.createElement("a");
+    link.className = "survey-store";
+    link.href = href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = label;
+    return link;
   }
 
   function sentMessage(record) {
@@ -597,7 +336,6 @@ var SURVEY_ACCESS_KEY = "";
     currentRecord.email = email;
     currentRecord.mailKind = kind || currentRecord.mailKind || "formsubmit";
     currentRecord.mailedAt = new Date().toISOString();
-    answers = currentRecord.answers;
     save(currentRecord);
     formEl.hidden = true;
     sentEl.hidden = false;
@@ -611,15 +349,20 @@ var SURVEY_ACCESS_KEY = "";
       subject: "App quiz results — stellartimelock.com/survey",
       from_name: "Stellar TimeLock survey",
       "Notify": NOTIFY_EMAIL,
-      "Recommended apps": appsBlock(currentRecord.appIds),
-      "Answers": answersBlock(currentRecord.answers),
+      "Recommended apps": model.appsBlock(currentRecord.appIds),
+      "Answers": model.answersBlock(currentRecord.answers, currentRecord.questionIds),
       "Visitor asked for a copy": email ? "Yes" : "No"
     };
     if (email) {
       body.email = email;
       body.replyto = email;
       body.ccemail = email;
-      body["Copy for visitor"] = visitorCopy(currentRecord.appIds, currentRecord.answers, email);
+      body["Copy for visitor"] = visitorCopy(
+        currentRecord.appIds,
+        currentRecord.answers,
+        currentRecord.questionIds,
+        email
+      );
     }
 
     submitBtn.disabled = true;
@@ -667,10 +410,17 @@ var SURVEY_ACCESS_KEY = "";
     hidden("_template", "table");
     hidden("_next", returnUrl());
     hidden("Notify", NOTIFY_EMAIL);
-    hidden("Recommended apps", appsBlock(currentRecord.appIds));
-    hidden("Answers", answersBlock(currentRecord.answers));
+    hidden("Recommended apps", model.appsBlock(currentRecord.appIds));
+    hidden("Answers", model.answersBlock(currentRecord.answers, currentRecord.questionIds));
     hidden("Visitor asked for a copy", email ? "Yes" : "No");
-    if (email) hidden("_autoresponse", visitorCopy(currentRecord.appIds, currentRecord.answers, email));
+    if (email) {
+      hidden("_autoresponse", visitorCopy(
+        currentRecord.appIds,
+        currentRecord.answers,
+        currentRecord.questionIds,
+        email
+      ));
+    }
 
     currentRecord.email = email;
     currentRecord.mailKind = "formsubmit";
@@ -717,17 +467,15 @@ var SURVEY_ACCESS_KEY = "";
   });
 
   backBtn.addEventListener("click", function () {
-    if (step === 0 || pickLocked) return;
-    step -= 1;
+    if (pickLocked) return;
+    if (!session.back()) return;
     renderQuestion(true);
   });
 
   retakeBtn.addEventListener("click", function () {
     clearSaved();
-    answers = {};
     currentRecord = null;
-    step = 0;
-    queue = queueFrom(answers);
+    session = model.createSession();
     emailEl.disabled = false;
     emailEl.value = "";
     formEl.hidden = false;
@@ -755,7 +503,6 @@ var SURVEY_ACCESS_KEY = "";
     }
     showResults(saved, !sentFlag);
   } else {
-    queue = queueFrom(answers);
     showQuiz();
   }
 })();
