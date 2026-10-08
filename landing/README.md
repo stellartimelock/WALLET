@@ -22,7 +22,7 @@ Or open `landing/index.html` via any static server.
 
 ## Survey
 
-`/survey/` is a static quiz (`survey/index.html`), same GitHub Pages folder as the rest of the site.
+The quiz source is `survey/index.html`. It stays in this folder so the main site can still open `/survey/`, and it is not linked from the homepage. Its public address is https://whatappfitsyou.stellartimelock.com/ — see `whatappfitsyou/` for the separate Pages project. The main GitHub Pages site cannot take a second custom domain.
 
 Email has no backend. The only value to paste is `SURVEY_ACCESS_KEY` in `assets/survey.js`.
 
