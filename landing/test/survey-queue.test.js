@@ -34,9 +34,9 @@ function walk(session, pick) {
   return seen;
 }
 
-test("the base quiz is ten questions and the longest path stays near fourteen", () => {
+test("the base quiz is nine questions and the longest path stays near fourteen", () => {
   const start = model.createSession();
-  assert.equal(start.queueIds().length, 10);
+  assert.equal(start.queueIds().length, 9);
 
   const allYes = model.createSession();
   const seen = walk(allYes, (question) => question.options.find((option) => option.match));
@@ -122,7 +122,7 @@ test("every app can be matched, renamed, and has an empty store link plus a repl
   walk(session, (question) => question.options.find((option) => option.match));
   const matched = session.appIds();
   const ids = Object.keys(model.APPS);
-  assert.equal(ids.length, 21);
+  assert.equal(ids.length, 20);
   ids.forEach((id) => {
     assert.ok(matched.includes(id), "missing match for " + id);
     const app = model.APPS[id];
@@ -143,14 +143,10 @@ test("every app can be matched, renamed, and has an empty store link plus a repl
   assert.deepEqual(model.normalizeAppIds(["vault", "send", "timelock"]), ["fortress", "flipsend", "timelock"]);
 });
 
-test("results sort a direct match ahead of a softer one, then keep first-seen order", () => {
+test("results keep first-seen order and lead with the first direct match", () => {
   const session = model.createSession();
-  walk(session, (question) => {
-    if (question.id === "twitter") return question.options.find((option) => option.value === "sometimes");
-    return question.options.find((option) => option.match) || question.options[0];
-  });
+  walk(session, (question) => question.options.find((option) => option.match) || question.options[0]);
   const ids = session.appIds();
-  assert.ok(ids.indexOf("timelock") < ids.indexOf("lostcontext"));
   assert.ok(ids.indexOf("text") < ids.indexOf("fortress"));
   assert.equal(ids[0], "timelock");
 });

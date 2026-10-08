@@ -1,0 +1,6 @@
+# Separate Cloudflare Pages project for the quiz.
+# The main site stays on GitHub Pages (one custom domain: stellartimelock.com).
+# Build the upload directory with ./prepare.sh, then deploy that directory.
+name = "whatappfitsyou"
+pages_build_output_dir = "../dist/whatappfitsyou"
+compatibility_date = "2026-10-08"
