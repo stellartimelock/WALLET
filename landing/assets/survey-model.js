@@ -23,14 +23,6 @@
       iosUrl: "",
       icon: "funnymoney.svg"
     },
-    lostcontext: {
-      name: "Lost Context",
-      description: "For people who use X and lose the thread.",
-      replaces: ["X threads"],
-      playUrl: "",
-      iosUrl: "",
-      icon: "lostcontext.svg"
-    },
     naturally: {
       name: "Naturally",
       description: "For camping, road trips, van or car living, and hot springs.",
@@ -220,16 +212,6 @@
       short: "Codes or builds apps",
       prompt: "Do you code or build apps?",
       options: yesNo("Yes", "Not really", ["market"])
-    },
-    {
-      id: "twitter",
-      short: "Uses X (Twitter)",
-      prompt: "Do you use X (Twitter)?",
-      options: [
-        { label: "Yes", value: "yes", match: true, weight: 2, apps: ["lostcontext"] },
-        { label: "Sometimes", value: "sometimes", match: true, weight: 1, apps: ["lostcontext"] },
-        { label: "No", value: "no", match: false, apps: [] }
-      ]
     },
     {
       id: "outdoors",
