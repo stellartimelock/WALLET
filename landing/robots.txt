@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /t/
 
 Sitemap: https://stellartimelock.com/sitemap.xml
