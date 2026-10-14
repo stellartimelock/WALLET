@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BACKROOMS</title>
+<meta name="description" content="Endless first-person Backrooms. Walk forever through procedurally generated yellow rooms.">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:monospace;color:#e8dc9a;touch-action:none;user-select:none}
+#hud{position:fixed;top:8px;left:10px;font-size:14px;text-shadow:0 0 4px #000;z-index:5}
+#start,#modal{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,8,0,.88);z-index:20;text-align:center;padding:20px}
+#modal{display:none}
+h1{letter-spacing:.3em;font-size:42px;margin:0 0 10px;color:#f1e27a}
+button{font:inherit;background:#c9b44a;color:#1a1500;border:0;padding:12px 22px;margin:6px;border-radius:6px;font-weight:bold}
+#joy{position:fixed;left:20px;bottom:20px;width:120px;height:120px;border-radius:50%;background:rgba(255,240,150,.12);border:2px solid rgba(255,240,150,.3);z-index:6;display:none}
+#knob{position:absolute;left:35px;top:35px;width:50px;height:50px;border-radius:50%;background:rgba(255,240,150,.45)}
+#act{position:fixed;right:20px;bottom:30px;z-index:6;display:none}
+#prompt{position:fixed;bottom:110px;width:100%;text-align:center;z-index:5;font-size:16px;display:none}
+.card{background:#2a2410;border:2px solid #c9b44a;padding:18px;border-radius:10px;max-width:420px;width:100%}
+.grid{display:grid;grid-template-columns:repeat(4,60px);gap:8px;justify-content:center;margin:12px}
+.grid div{height:60px;background:#c9b44a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#1a1500}
+canvas#cc{background:#111;border:1px solid #c9b44a;touch-action:none}
+a{color:#ffe46b}
+</style></head><body>
+<div id="hud"></div>
+<div id="prompt"></div>
+<div id="joy"><div id="knob"></div></div>
+<button id="act">USE</button>
+<div id="start"><h1>BACKROOMS</h1><p>You noclipped out of reality.<br>The rooms go on forever.</p>
+<p style="font-size:13px;opacity:.8">Desktop: WASD + mouse (click to look). Phone: left stick to walk, drag right side to look.<br>Find the glowing EXIT doors and pass a test to go deeper.</p>
+<button id="go">ENTER</button><button id="reset" style="background:#555;color:#ddd">Reset progress</button></div>
+<div id="modal"><div class="card" id="mc"></div></div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const REEL='https://www.facebook.com/share/r/19oVgLiR3z/';
+const C=12, H=3.2; // cell size, wall height
+let save=JSON.parse(localStorage.getItem('backrooms')||'{"level":0,"best":0,"steps":0}');
+const persist=()=>localStorage.setItem('backrooms',JSON.stringify(save));
+const R=new THREE.WebGLRenderer({antialias:false});R.setPixelRatio(Math.min(devicePixelRatio,1.5));R.setSize(innerWidth,innerHeight);document.body.appendChild(R.domElement);
+const S=new THREE.Scene();const cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,60);cam.position.set(C/2,1.6,C/2);cam.rotation.order='YXZ';
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
+function tex(draw,w=128,h=128,rep=[1,1]){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(...rep);t.magFilter=THREE.NearestFilter;return t}
+const wallT=tex((g,w,h)=>{g.fillStyle='#c8b45a';g.fillRect(0,0,w,h);for(let x=0;x<w;x+=16){g.fillStyle=x%32?'#bda850':'#d2bf66';g.fillRect(x,0,8,h)}for(let i=0;i<300;i++){g.fillStyle=`rgba(90,70,20,${Math.random()*.15})`;g.fillRect(Math.random()*w,Math.random()*h,2,2)}},128,128,[3,1]);
+const carpT=tex((g,w,h)=>{g.fillStyle='#8a7a45';g.fillRect(0,0,w,h);for(let i=0;i<2500;i++){g.fillStyle=`rgba(${60+Math.random()*60},${50+Math.random()*50},20,.5)`;g.fillRect(Math.random()*w,Math.random()*h,1,1)}},128,128,[4,4]);
+const ceilT=tex((g,w,h)=>{g.fillStyle='#d8d2b0';g.fillRect(0,0,w,h);g.strokeStyle='#a8a080';g.lineWidth=2;g.strokeRect(0,0,w,h);g.strokeRect(0,0,w/2,h/2);g.strokeRect(w/2,h/2,w/2,h/2)},64,64,[6,6]);
+const M={wall:new THREE.MeshLambertMaterial({map:wallT}),floor:new THREE.MeshLambertMaterial({map:carpT}),ceil:new THREE.MeshLambertMaterial({map:ceilT}),light:new THREE.MeshBasicMaterial({color:0xfffbe0}),exit:new THREE.MeshBasicMaterial({color:0x40ff70})};
+S.background=new THREE.Color(0x2a2410);S.fog=new THREE.Fog(0x3a3214,4,34);
+S.add(new THREE.AmbientLight(0xfff2b0,.55));const hemi=new THREE.HemisphereLight(0xfff8d0,0x5a4a20,.6);S.add(hemi);
+// deterministic hash per cell + level
+function rnd(x,z,k){let h=(x*374761393+z*668265263+k*2147483647+save.level*1013904223)|0;h=(h^(h>>>13))*1274126177|0;return((h^(h>>>16))>>>0)/4294967296}
+const cells=new Map(),walls=[],interact=[];
+function wallBox(grp,x,z,w,d){const m=new THREE.Mesh(new THREE.BoxGeometry(w,H,d),M.wall);m.position.set(x,H/2,z);grp.add(m);walls.push({x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2,cell:grp.userData.key})}
+function buildCell(cx,cz){const key=cx+','+cz;if(cells.has(key))return;const g=new THREE.Group();g.userData.key=key;const ox=cx*C,oz=cz*C;
+ const f=new THREE.Mesh(new THREE.PlaneGeometry(C,C),M.floor);f.rotation.x=-Math.PI/2;f.position.set(ox+C/2,0,oz+C/2);g.add(f);
+ const c=new THREE.Mesh(new THREE.PlaneGeometry(C,C),M.ceil);c.rotation.x=Math.PI/2;c.position.set(ox+C/2,H,oz+C/2);g.add(c);
+ for(let i=0;i<2;i++)for(let j=0;j<2;j++){if(rnd(cx,cz,10+i*2+j)<.15)continue;const l=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.6),M.light);l.rotation.x=Math.PI/2;l.position.set(ox+3+i*6,H-.01,oz+3+j*6);l.userData.flick=rnd(cx,cz,20+i)<.1;g.add(l)}
+ // walls on west & south edges with door gaps; plus interior partitions
+ const T=.3;for(const side of [0,1]){const r=rnd(cx,cz,side);if(r<.35)continue;const gap=2+rnd(cx,cz,side+5)*(C-6),gw=1.8;
+  if(side==0){wallBox(g,ox,oz+gap/2,T,gap);wallBox(g,ox,oz+gap+gw+(C-gap-gw)/2,T,C-gap-gw)}else{wallBox(g,ox+gap/2,oz,gap,T);wallBox(g,ox+gap+gw+(C-gap-gw)/2,oz,C-gap-gw,T)}}
+ if(rnd(cx,cz,3)<.4){const px=ox+3+rnd(cx,cz,4)*6,pz=oz+3+rnd(cx,cz,6)*6;wallBox(g,px,pz,rnd(cx,cz,7)<.5?4:1,rnd(cx,cz,7)<.5?1:4)}
+ if(rnd(cx,cz,8)<.6){const p=new THREE.Mesh(new THREE.BoxGeometry(1.2,H,1.2),M.wall);p.position.set(ox+C/2,H/2,oz+C/2);g.add(p);walls.push({x0:ox+C/2-.6,x1:ox+C/2+.6,z0:oz+C/2-.6,z1:oz+C/2+.6,cell:key})}
+ const near0=Math.abs(cx)+Math.abs(cz)<2, r9=rnd(cx,cz,9);
+ if(!near0&&r9<.035)addTV(g,ox,oz,key);else if(!near0&&r9<.07)addExit(g,ox,oz,key);
+ S.add(g);cells.set(key,g)}
+function addTV(g,ox,oz,key){const cv=document.createElement('canvas');cv.width=256;cv.height=192;const x=cv.getContext('2d');x.fillStyle='#111';x.fillRect(0,0,256,192);x.fillStyle='#1877f2';x.fillRect(16,16,224,120);x.fillStyle='#fff';x.font='bold 22px monospace';x.fillText('▶ WATCH REEL',40,70);x.font='14px monospace';x.fillText('creator video on Facebook',30,100);x.fillStyle='#e8dc9a';x.fillText('tap / press E to open',40,170);
+ const tv=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.2,.4),[M.wall,M.wall,M.wall,M.wall,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv)}),M.wall]);tv.position.set(ox+C/2,1.4,oz+C/2+.81);g.add(tv);interact.push({type:'tv',pos:tv.position,cell:key})}
+function addExit(g,ox,oz,key){const d=new THREE.Mesh(new THREE.BoxGeometry(1.4,2.4,.15),M.exit);d.position.set(ox+C/2,1.2,oz+C/2+.68);g.add(d);const pl=new THREE.PointLight(0x40ff70,1,6);pl.position.copy(d.position).add(new THREE.Vector3(0,0,1));g.add(pl);interact.push({type:'exit',pos:d.position,cell:key})}
+function clearWorld(){for(const g of cells.values())S.remove(g);cells.clear();walls.length=0;interact.length=0}
+function stream(){const cx=Math.floor(cam.position.x/C),cz=Math.floor(cam.position.z/C),r=3;
+ for(let i=-r;i<=r;i++)for(let j=-r;j<=r;j++)buildCell(cx+i,cz+j);
+ for(const [k,g] of cells){const [a,b]=k.split(',').map(Number);if(Math.abs(a-cx)>r+1||Math.abs(b-cz)>r+1){S.remove(g);g.traverse(o=>o.geometry&&o.geometry.dispose());cells.delete(k);for(let i=walls.length-1;i>=0;i--)if(walls[i].cell==k)walls.splice(i,1);for(let i=interact.length-1;i>=0;i--)if(interact[i].cell==k)interact.splice(i,1)}}}
+// input
+const keys={};let yaw=0,pitch=0,paused=true,joy={x:0,y:0};
+addEventListener('keydown',e=>{keys[e.code]=1;if(e.code=='KeyE')use()});addEventListener('keyup',e=>keys[e.code]=0);
+R.domElement.addEventListener('click',()=>{if(!paused&&!touch)R.domElement.requestPointerLock()});
+addEventListener('mousemove',e=>{if(document.pointerLockElement){yaw-=e.movementX*.0025;pitch=Math.max(-1.4,Math.min(1.4,pitch-e.movementY*.0025))}});
+const touch='ontouchstart' in window;let joyId=null,lookId=null,lx=0,ly=0;const J=document.getElementById('joy'),K=document.getElementById('knob');
+if(touch){J.style.display='block';document.getElementById('act').style.display='block'}
+addEventListener('touchstart',e=>{for(const t of e.changedTouches){if(t.target.closest('button,a,.card'))continue;if(t.clientX<innerWidth/2&&joyId===null){joyId=t.identifier}else if(lookId===null){lookId=t.identifier;lx=t.clientX;ly=t.clientY}}},{passive:true});
+addEventListener('touchmove',e=>{for(const t of e.changedTouches){if(t.identifier===joyId){const r=J.getBoundingClientRect();let dx=t.clientX-(r.left+60),dy=t.clientY-(r.top+60);const m=Math.hypot(dx,dy);if(m>50){dx*=50/m;dy*=50/m}joy={x:dx/50,y:dy/50};K.style.transform=`translate(${dx}px,${dy}px)`}else if(t.identifier===lookId){yaw-=(t.clientX-lx)*.005;pitch=Math.max(-1.4,Math.min(1.4,pitch-(t.clientY-ly)*.005));lx=t.clientX;ly=t.clientY}}},{passive:true});
+addEventListener('touchend',e=>{for(const t of e.changedTouches){if(t.identifier===joyId){joyId=null;joy={x:0,y:0};K.style.transform=''}if(t.identifier===lookId)lookId=null}});
+document.getElementById('act').onclick=use;
+// hum
+let actx;function hum(){actx=new AudioContext();const o=actx.createOscillator(),o2=actx.createOscillator(),gn=actx.createGain();o.type='sawtooth';o.frequency.value=60;o2.type='sine';o2.frequency.value=120;gn.gain.value=.025;o.connect(gn);o2.connect(gn);gn.connect(actx.destination);o.start();o2.start()}
+// interaction
+let nearby=null;const P=document.getElementById('prompt'),MOD=document.getElementById('modal'),MC=document.getElementById('mc');
+function use(){if(!nearby||paused)return;if(nearby.type=='tv'){open(`<h2>📺 A TV flickers on...</h2><p>Someone left a video playing in here.</p><p><a href="${REEL}" target="_blank" rel="noopener">▶ Watch the creator's reel on Facebook</a></p><button onclick="closeM()">Back to the rooms</button>`)}else game()}
+window.closeM=()=>{MOD.style.display='none';paused=false};
+function open(h){paused=true;document.exitPointerLock?.();MOD.style.display='flex';MC.innerHTML=h}
+function win(){save.level++;save.best=Math.max(save.best,save.level);persist();open(`<h2>Level ${save.level}</h2><p>You slip through the door. The hum changes pitch.</p><button onclick="closeM()">Continue</button>`);clearWorld();cam.position.set(C/2,1.6,C/2);S.fog.color.setHSL(.13,.4,.12-Math.min(save.level,8)*.01);S.background.copy(S.fog.color)}
+function lose(){open(`<h2>The door stays shut.</h2><p>Find another exit.</p><button onclick="closeM()">Keep walking</button>`)}
+window.__win=win;window.__lose=lose;
+function game(){[memory,quiz,coins][Math.floor(Math.random()*3)]()}
+function quiz(){const Q=[['What hums above you?',['Fluorescent lights','Ceiling fans','Birds'],0],['How many levels are there?',['3','37','Nobody knows'],2],['Wallpaper color?',['Mono-yellow','Blue','Plaid'],0],['If you hear footsteps you should...',['Run toward them','Keep walking calmly','Shout hello'],1]];const q=Q[Math.floor(Math.random()*Q.length)];open(`<h2>EXIT TEST: Quiz</h2><p>${q[0]}</p>`+q[1].map((a,i)=>`<button onclick="${i==q[2]?'__win()':'__lose()'}">${a}</button>`).join('<br>'))}
+function memory(){const e=['🔦','💡','🚪','📺','🔦','💡','🚪','📺'].sort(()=>Math.random()-.5);open(`<h2>EXIT TEST: Memory</h2><p>Match all pairs. Mistakes left: <b id=ml>4</b></p><div class=grid id=mg>${e.map((x,i)=>`<div data-i=${i}>?</div>`).join('')}</div>`);let sel=[],done=0,miss=4,lock=false;
+ document.getElementById('mg').onclick=ev=>{const d=ev.target.closest('[data-i]');if(!d||lock||d.dataset.ok||sel.includes(d))return;d.textContent=e[d.dataset.i];sel.push(d);if(sel.length==2){lock=true;const[a,b]=sel;setTimeout(()=>{if(a.textContent==b.textContent){a.dataset.ok=b.dataset.ok=1;done++;if(done==4)win()}else{a.textContent=b.textContent='?';if(--miss<=0)return lose();document.getElementById('ml').textContent=miss}sel=[];lock=false},500)}}}
+function coins(){open(`<h2>EXIT TEST: Catch 10 coins</h2><p>Drag / move to steer. Score <b id=cs>0</b></p><canvas id=cc width=300 height=360></canvas>`);const cv=document.getElementById('cc'),g=cv.getContext('2d');let px=150,sc=0,miss=0,items=[],t=0,end=false;
+ const mv=e=>{const r=cv.getBoundingClientRect();px=((e.touches?e.touches[0].clientX:e.clientX)-r.left)*300/r.width};cv.onmousemove=mv;cv.ontouchmove=e=>{e.preventDefault();mv(e)};
+ (function f(){if(end)return;t++;if(t%35==0)items.push({x:20+Math.random()*260,y:0});g.fillStyle='#111';g.fillRect(0,0,300,360);g.fillStyle='#c9b44a';g.fillRect(px-30,340,60,10);
+  for(const it of items){it.y+=3+sc*.2;g.fillStyle='#ffd700';g.beginPath();g.arc(it.x,it.y,9,0,7);g.fill();if(it.y>335&&Math.abs(it.x-px)<36){it.dead=1;sc++;document.getElementById('cs').textContent=sc}else if(it.y>360){it.dead=1;miss++}}
+  items=items.filter(i=>!i.dead);g.fillStyle='#e8dc9a';g.fillText('missed '+miss+'/5',8,14);if(sc>=10){end=1;return win()}if(miss>=5){end=1;return lose()}requestAnimationFrame(f)})()}
+// loop
+const clock=new THREE.Clock(),fwd=new THREE.Vector3(),rt=new THREE.Vector3();
+function collide(p){const r=.35;for(const w of walls){if(p.x>w.x0-r&&p.x<w.x1+r&&p.z>w.z0-r&&p.z<w.z1+r)return true}return false}
+function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;
+ if(!paused){cam.rotation.set(pitch,yaw,0);fwd.set(-Math.sin(yaw),0,-Math.cos(yaw));rt.set(Math.cos(yaw),0,-Math.sin(yaw));
+  let f=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0)-joy.y,s=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x;
+  const sp=(keys.ShiftLeft?5:3)*dt,mv=fwd.clone().multiplyScalar(f*sp).add(rt.clone().multiplyScalar(s*sp));
+  const nx=cam.position.clone();nx.x+=mv.x;if(!collide(nx))cam.position.x=nx.x;nx.copy(cam.position);nx.z+=mv.z;if(!collide(nx))cam.position.z=nx.z;
+  if(f||s){save.steps+=sp;cam.position.y=1.6+Math.sin(t*9)*.03}
+  stream();nearby=null;for(const it of interact)if(it.pos.distanceTo(cam.position)<2.6){nearby=it;break}
+  P.style.display=nearby?'block':'none';if(nearby)P.textContent=nearby.type=='tv'?(touch?'Tap USE to watch':'Press E to watch'):(touch?'Tap USE: pass a test to go deeper':'Press E: pass a test to go deeper');
+  for(const g of cells.values())for(const o of g.children)if(o.userData.flick)o.visible=Math.random()>.08;
+  if(Math.floor(t)%5==0)persist()}
+ document.getElementById('hud').textContent=`LEVEL ${save.level}  ·  ${Math.floor(save.steps)}m walked  ·  deepest ${save.best}`;
+ R.render(S,cam)}
+document.getElementById('go').onclick=()=>{document.getElementById('start').style.display='none';paused=false;try{hum()}catch(e){}if(!touch)R.domElement.requestPointerLock()};
+document.getElementById('reset').onclick=()=>{save={level:0,best:0,steps:0};persist()};
+stream();loop();
+</script></body></html>
