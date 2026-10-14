@@ -3,32 +3,47 @@
 <title>Mike &amp; Ronda's The Place Restaurant East — Flagstaff, AZ</title>
 <meta name="description" content="American comfort food diner on Route 66 in east Flagstaff: hot breakfasts, burgers and chops. Call (928) 526-8138.">
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--red:#b3261e;--cream:#fff8ee;--ink:#2b2118;--muted:#6d5f52}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--cream);color:var(--ink);line-height:1.5}
-.banner{background:#2b2118;color:#fff;text-align:center;font-size:.8rem;padding:6px}
-header{background:var(--red);color:#fff;padding:48px 20px;text-align:center}
-header h1{margin:0 0 6px;font-size:clamp(1.8rem,5vw,3rem)}header p{margin:4px 0}
-.btn{display:inline-block;background:#fff;color:var(--red);font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none;margin:14px 6px 0}
-.btn.alt{background:transparent;color:#fff;border:2px solid #fff}
-main{max-width:960px;margin:auto;padding:20px}section{margin:40px 0}h2{color:var(--red);border-bottom:3px solid var(--red);padding-bottom:4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.card{background:#fff;border-radius:12px;padding:16px 18px;box-shadow:0 2px 8px #0001}.card h3{margin-top:0}
-.card ul{padding-left:18px;margin:0}.note{color:var(--muted);font-size:.85rem}
-table{border-collapse:collapse;width:100%;max-width:420px;background:#fff;border-radius:12px;overflow:hidden}td{padding:8px 14px;border-bottom:1px solid #eee}
-.ph{aspect-ratio:4/3;border-radius:12px;background:repeating-linear-gradient(45deg,#f1e3cf,#f1e3cf 12px,#ead8bf 12px,#ead8bf 24px);display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-weight:600;padding:10px}
-blockquote{margin:0;font-style:italic}iframe{width:100%;height:340px;border:0;border-radius:12px}
-.callbar{position:fixed;bottom:0;left:0;right:0;background:var(--red);text-align:center;padding:10px;display:none}.callbar a{color:#fff;font-weight:700;text-decoration:none;font-size:1.1rem}
-@media(max-width:700px){.callbar{display:block}body{padding-bottom:56px}}
-footer{text-align:center;color:var(--muted);font-size:.8rem;padding:30px 20px}
+:root{--blue:#0a6fd6;--blue-deep:#0756a8;--yellow:#ffd400;--red:#d62828;--ink:#123a6b;--muted:#d7e8ff;--card:#fff;--space:1.35rem}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--blue);color:#fff;line-height:1.6}
+h1,h2,h3{font-family:"Fredoka",system-ui,sans-serif;line-height:1.15;font-weight:700;color:var(--yellow)}
+a{color:var(--yellow)}
+.banner{background:var(--blue-deep);color:#fff;text-align:center;font-size:.8rem;padding:8px 16px;letter-spacing:.02em}
+.storefront{display:block;width:100%;height:auto;background:#87b8ef}
+.intro{text-align:center;padding:36px 22px 40px;border-top:4px solid var(--red)}
+.intro h1{margin:0 0 10px;font-size:clamp(2rem,5.4vw,3.25rem);letter-spacing:.01em}
+.intro p{margin:8px 0;font-size:1.05rem}
+.btn{display:inline-block;background:var(--yellow);color:var(--blue);font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none;margin:18px 6px 0;border:2px solid var(--yellow)}
+.btn.alt{background:transparent;color:#fff;border-color:#fff}
+main{max-width:980px;margin:auto;padding:12px 22px 48px}section{margin:56px 0}
+h2{border-bottom:3px solid var(--yellow);box-shadow:0 3px 0 var(--red);padding-bottom:8px;margin:0 0 18px;font-size:1.75rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space)}
+.card{background:var(--card);color:var(--ink);border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px #00000022}
+.card h3{margin:0 0 10px;font-size:1.25rem;color:var(--blue)}
+.card ul{padding-left:18px;margin:0}.card li+li{margin-top:.35rem}
+.card .note,.card a{color:#4d6a8c}.note{color:var(--muted);font-size:.85rem}
+table{border-collapse:collapse;width:100%;max-width:420px;background:#fff;color:var(--ink);border-radius:14px;overflow:hidden}td{padding:10px 16px;border-bottom:1px solid #dbe7f5}
+.photos figure{margin:0}.photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;display:block;box-shadow:0 2px 10px #00000022;border:3px solid var(--yellow)}
+blockquote{margin:0;font-style:italic}iframe{width:100%;height:340px;border:0;border-radius:14px}
+.callbar{position:fixed;bottom:0;left:0;right:0;background:var(--blue-deep);border-top:3px solid var(--red);text-align:center;padding:10px;display:none}
+.callbar a{color:var(--yellow);font-weight:700;text-decoration:none;font-size:1.1rem}
+@media(max-width:700px){.callbar{display:block}body{padding-bottom:56px}.intro{padding:28px 16px 32px}}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:36px 22px 48px;line-height:1.6}
+footer a{color:var(--yellow)}
 </style></head><body>
 <div class="banner">Demo concept site — not the official website of the restaurant.</div>
 <header>
+<img class="storefront" src="img/storefront.jpg" width="1600" height="1084" alt="Mike &amp; Ronda's The Place storefront sign in Flagstaff">
+<div class="intro">
 <h1>Mike &amp; Ronda's The Place</h1>
 <p><strong>Restaurant East</strong> · Flagstaff, Arizona</p>
 <p>American comfort food: hot breakfasts, burgers &amp; chops. Dine-in &amp; takeout.</p>
 <a class="btn" href="tel:+19285268138">📞 Call (928) 526-8138</a>
 <a class="btn alt" href="https://www.google.com/maps/dir/?api=1&destination=3518+E+Route+66+Ste+107+Flagstaff+AZ+86004">Get directions</a>
+</div>
 </header>
 <main>
 <section id="menu"><h2>Menu highlights</h2>
@@ -56,8 +71,12 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:30px 20px}
 <table><tr><td>Monday – Saturday</td><td>5:00 AM – 8:00 PM</td></tr><tr><td>Sunday</td><td>6:00 AM – 3:00 PM</td></tr></table>
 <p class="note">Hours as listed online; please call to confirm, especially on holidays.</p></section>
 <section id="photos"><h2>Photos</h2>
-<div class="grid"><div class="ph">Photo placeholder — breakfast plate</div><div class="ph">Photo placeholder — dining room</div><div class="ph">Photo placeholder — burgers</div></div>
-<p class="note">Placeholders only; real photos to be supplied by the restaurant.</p></section>
+<div class="grid photos">
+<figure><img src="img/breakfast.jpg" width="1200" height="800" alt="Breakfast plate with pancakes, scrambled eggs, and bacon"></figure>
+<figure><img src="img/burger.jpg" width="1200" height="800" alt="Classic diner cheeseburger with fries"></figure>
+<figure><img src="img/dining-room.jpg" width="1200" height="928" alt="Cozy diner interior with red booths and checkered floor"></figure>
+</div>
+<p class="note">Sample stock photos</p></section>
 <section id="reviews"><h2>What diners say</h2>
 <div class="grid">
 <div class="card"><blockquote>“Big portions for breakfast, can be noisy but overall good food.”</blockquote><p class="note">— CorrineW, OpenTable (4/5), February 2019</p></div>
@@ -68,6 +87,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:30px 20px}
 <p><strong>3518 E. Route 66, Suite 107, Flagstaff, AZ 86004</strong><br><a href="tel:+19285268138">(928) 526-8138</a></p>
 <iframe loading="lazy" title="Map" src="https://www.google.com/maps?q=3518+E+Route+66+Ste+107,+Flagstaff,+AZ+86004&output=embed"></iframe></section>
 </main>
-<footer>Demo concept site. Info gathered from public listings (restaurant.com, SinglePlatform, Flagstaff Chamber, OpenTable) in October 2026.</footer>
+<footer>Demo concept site. Info gathered from public listings (restaurant.com, SinglePlatform, Flagstaff Chamber, OpenTable) in October 2026.<br>
+Photos: <a href="https://www.pexels.com/photo/breakfast-on-plate-22882256/">Hebert Santos</a> (breakfast), <a href="https://www.pexels.com/photo/plate-of-fries-and-burger-3219483/">Engin Akyurt</a> (burger), and <a href="https://www.pexels.com/photo/retro-diner-interior-with-vintage-decor-36550107/">C H E L S E A</a> (dining room) on Pexels.</footer>
 <div class="callbar"><a href="tel:+19285268138">📞 Tap to call (928) 526-8138</a></div>
 </body></html>
