@@ -10,7 +10,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:monos
 #modal{display:none}
 h1{letter-spacing:.3em;font-size:42px;margin:0 0 10px;color:#f1e27a}
 button{font:inherit;background:#c9b44a;color:#1a1500;border:0;padding:12px 22px;margin:6px;border-radius:6px;font-weight:bold}
-#joy{position:fixed;left:20px;bottom:20px;width:120px;height:120px;border-radius:50%;background:rgba(255,240,150,.12);border:2px solid rgba(255,240,150,.3);z-index:6;display:none}
+#joy{position:fixed;left:20px;bottom:20px;touch-action:none;width:120px;height:120px;border-radius:50%;background:rgba(255,240,150,.12);border:2px solid rgba(255,240,150,.3);z-index:6;display:none}
 #knob{position:absolute;left:35px;top:35px;width:50px;height:50px;border-radius:50%;background:rgba(255,240,150,.45)}
 #act{position:fixed;right:20px;bottom:30px;z-index:6;display:none}
 #prompt{position:fixed;bottom:110px;width:100%;text-align:center;z-index:5;font-size:16px;display:none}
@@ -21,11 +21,11 @@ canvas#cc{background:#111;border:1px solid #c9b44a;touch-action:none}
 a{color:#ffe46b}
 </style></head><body>
 <div id="hud"></div>
-<div id="prompt"></div>
+<div id="prompt"></div><div id="toast" style="position:fixed;top:34px;left:10px;z-index:5;color:#7fffe0;transition:opacity .4s;opacity:0"></div><button id="lt" style="position:fixed;top:30px;right:8px;z-index:6;padding:6px 10px;font-size:12px">🔦</button>
 <div id="joy"><div id="knob"></div></div>
 <button id="act">USE</button>
 <div id="start"><h1>BACKROOMS</h1><p>You noclipped out of reality.<br>The rooms go on forever.</p>
-<p style="font-size:13px;opacity:.8">Desktop: WASD + mouse (click to look). Phone: left stick to walk, drag right side to look.<br>Find the glowing EXIT doors and pass a test to go deeper.</p>
+<p style="font-size:13px;opacity:.8">Desktop: WASD + mouse (click to look). Phone: left stick to walk, drag right side to look.<br>Head to the glowing signpost to pick a direction. Collect orbs, find EXIT doors, pass a test to go deeper.<br>Points unlock ranks and flashlight colors (F / 🔦).</p>
 <button id="go">ENTER</button><button id="reset" style="background:#555;color:#ddd">Reset progress</button></div>
 <div id="modal"><div class="card" id="mc"></div></div>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
@@ -33,7 +33,7 @@ a{color:#ffe46b}
 import * as THREE from 'three';
 const REEL='https://www.facebook.com/share/r/19oVgLiR3z/';
 const C=12, H=3.2; // cell size, wall height
-let save=JSON.parse(localStorage.getItem('backrooms')||'{"level":0,"best":0,"steps":0}');
+let save=Object.assign({level:0,best:0,steps:0,points:0,orbs:{},themes:{},sign:0,light:0},JSON.parse(localStorage.getItem('backrooms')||'{}'));
 const persist=()=>localStorage.setItem('backrooms',JSON.stringify(save));
 const R=new THREE.WebGLRenderer({antialias:false});R.setPixelRatio(Math.min(devicePixelRatio,1.5));R.setSize(innerWidth,innerHeight);document.body.appendChild(R.domElement);
 const S=new THREE.Scene();const cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,60);cam.position.set(C/2,1.6,C/2);cam.rotation.order='YXZ';
@@ -42,48 +42,107 @@ function tex(draw,w=128,h=128,rep=[1,1]){const c=document.createElement('canvas'
 const wallT=tex((g,w,h)=>{g.fillStyle='#c8b45a';g.fillRect(0,0,w,h);for(let x=0;x<w;x+=16){g.fillStyle=x%32?'#bda850':'#d2bf66';g.fillRect(x,0,8,h)}for(let i=0;i<300;i++){g.fillStyle=`rgba(90,70,20,${Math.random()*.15})`;g.fillRect(Math.random()*w,Math.random()*h,2,2)}},128,128,[3,1]);
 const carpT=tex((g,w,h)=>{g.fillStyle='#8a7a45';g.fillRect(0,0,w,h);for(let i=0;i<2500;i++){g.fillStyle=`rgba(${60+Math.random()*60},${50+Math.random()*50},20,.5)`;g.fillRect(Math.random()*w,Math.random()*h,1,1)}},128,128,[4,4]);
 const ceilT=tex((g,w,h)=>{g.fillStyle='#d8d2b0';g.fillRect(0,0,w,h);g.strokeStyle='#a8a080';g.lineWidth=2;g.strokeRect(0,0,w,h);g.strokeRect(0,0,w/2,h/2);g.strokeRect(w/2,h/2,w/2,h/2)},64,64,[6,6]);
+function solid(c1,c2,rep=[2,2],grid=0){return tex((g,w,h)=>{g.fillStyle=c1;g.fillRect(0,0,w,h);if(grid){g.strokeStyle=c2;g.lineWidth=2;for(let i=0;i<=w;i+=grid){g.beginPath();g.moveTo(i,0);g.lineTo(i,h);g.moveTo(0,i);g.lineTo(w,i);g.stroke()}}for(let i=0;i<600;i++){g.fillStyle=`rgba(0,0,0,${Math.random()*.12})`;g.fillRect(Math.random()*w,Math.random()*h,2,2)}},128,128,rep)}
+const L=(t,o)=>new THREE.MeshLambertMaterial(Object.assign({map:t},o||{}));
+const THEMES=[
+ {name:'Level 0',wall:null,floor:null,ceil:null,light:0xfffbe0,walls:.65,parts:.4,pillars:.6},
+ {name:'Parking Garage',wall:L(solid('#5a5a5a','#444',[2,1])),floor:L(solid('#3a3a3a','#e0c020',[2,2],64)),ceil:L(solid('#4a4a4a','#333')),light:0xcfd8ff,walls:.25,parts:.1,pillars:1,dark:1},
+ {name:'Pool Rooms',wall:L(solid('#f2f4f4','#9fc7d0',[4,1],16)),floor:L(solid('#e8f4f6','#8fbfcc',[6,6],16)),ceil:L(solid('#f6f8f8','#cfd8da',[6,6],16)),light:0xe8fbff,walls:.5,parts:.2,pillars:.3,pool:1},
+ {name:'Endless Office',wall:L(solid('#b8b4a8','#999',[3,1])),floor:L(solid('#5a6470','#4a5460',[4,4])),ceil:null,light:0xf4f8ff,walls:.4,parts:.1,pillars:0,cubes:1},
+ {name:'Red Hall',wall:L(solid('#5a1a1a','#3a0a0a',[3,1])),floor:L(solid('#2a1010','#1a0808',[4,4])),ceil:L(solid('#3a1414','#200')),light:0xff3030,walls:.95,parts:.85,pillars:.2,dark:1},
+ {name:'Warehouse',wall:L(solid('#6e6250','#5a4e3e',[2,1],32)),floor:L(solid('#55524a','#48453e',[3,3])),ceil:L(solid('#3a3630','#2a2620')),light:0xffd8a0,walls:.2,parts:.05,pillars:.5,crates:1,dark:1}];
+const lightMats={};
 const M={wall:new THREE.MeshLambertMaterial({map:wallT}),floor:new THREE.MeshLambertMaterial({map:carpT}),ceil:new THREE.MeshLambertMaterial({map:ceilT}),light:new THREE.MeshBasicMaterial({color:0xfffbe0}),exit:new THREE.MeshBasicMaterial({color:0x40ff70})};
+THEMES[0].wall=M.wall;THEMES[0].floor=M.floor;THEMES[0].ceil=M.ceil;THEMES[3].ceil=M.ceil;
+const water=new THREE.MeshBasicMaterial({color:0x3fa7c8,transparent:true,opacity:.7}),crateM=L(solid('#8a6a3a','#5a4020',[1,1],32)),deskM=new THREE.MeshLambertMaterial({color:0x8a8478});
+const HUB=2;const isHub=(cx,cz)=>Math.abs(cx)<=HUB&&Math.abs(cz)<=HUB;
+const SIGN=new THREE.Vector3(C/2,0,-C*1.5); // signpost in the hub, visible from spawn
+const sector=(cx,cz)=>((Math.round(Math.atan2(cz+.5,cx+.5)/(Math.PI/3))%6)+6)%6; // 6 directions, 60° each
+function themeOf(cx,cz){if(isHub(cx,cz))return THEMES[0];const rx=Math.floor(cx/3),rz=Math.floor(cz/3);if(rnd(rx,rz,98)<.7)return THEMES[sector(cx,cz)];return THEMES[Math.floor(rnd(rx,rz,99)*THEMES.length)]}
 S.background=new THREE.Color(0x2a2410);S.fog=new THREE.Fog(0x3a3214,4,34);
+const flash=new THREE.SpotLight(0xffffff,1.5,18,.5,.5);cam.add(flash);flash.position.set(0,0,0);flash.target.position.set(0,0,-1);cam.add(flash.target);S.add(cam);
+function cycleLight(){const ok=LIGHTS.filter(l=>save.points>=l[0]);save.light=(save.light+1)%ok.length;persist();award(0,'flashlight: '+ok[save.light][2])}
 S.add(new THREE.AmbientLight(0xfff2b0,.55));const hemi=new THREE.HemisphereLight(0xfff8d0,0x5a4a20,.6);S.add(hemi);
 // deterministic hash per cell + level
 function rnd(x,z,k){let h=(x*374761393+z*668265263+k*2147483647+save.level*1013904223)|0;h=(h^(h>>>13))*1274126177|0;return((h^(h>>>16))>>>0)/4294967296}
-const cells=new Map(),walls=[],interact=[];
-function wallBox(grp,x,z,w,d){const m=new THREE.Mesh(new THREE.BoxGeometry(w,H,d),M.wall);m.position.set(x,H/2,z);grp.add(m);walls.push({x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2,cell:grp.userData.key})}
-function buildCell(cx,cz){const key=cx+','+cz;if(cells.has(key))return;const g=new THREE.Group();g.userData.key=key;const ox=cx*C,oz=cz*C;
- const f=new THREE.Mesh(new THREE.PlaneGeometry(C,C),M.floor);f.rotation.x=-Math.PI/2;f.position.set(ox+C/2,0,oz+C/2);g.add(f);
- const c=new THREE.Mesh(new THREE.PlaneGeometry(C,C),M.ceil);c.rotation.x=Math.PI/2;c.position.set(ox+C/2,H,oz+C/2);g.add(c);
- for(let i=0;i<2;i++)for(let j=0;j<2;j++){if(rnd(cx,cz,10+i*2+j)<.15)continue;const l=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.6),M.light);l.rotation.x=Math.PI/2;l.position.set(ox+3+i*6,H-.01,oz+3+j*6);l.userData.flick=rnd(cx,cz,20+i)<.1;g.add(l)}
+const cells=new Map(),walls=[],interact=[],orbs=[];
+const orbG=new THREE.SphereGeometry(.22,12,8),orbM=new THREE.MeshBasicMaterial({color:0x7fffe0});
+// ===== REWARDS (device-only points, no money) =====
+// TODO(xlm): future advertiser-funded XLM rewards like Crypto Tower's capped Paid Hall. Needs server-side
+// verified views + a payout queue; never pay from client-side counts.
+const RANKS=[[0,'Wanderer'],[250,'Explorer'],[750,'Lost Soul'],[2000,'Noclipper'],[5000,'Entity']];
+const LIGHTS=[[0,0xffffff,'White'],[300,0xffb040,'Amber'],[800,0x60ff90,'Green'],[1500,0xff4040,'Red'],[3000,0xb070ff,'Violet']];
+const rank=()=>RANKS.filter(r=>save.points>=r[0]).pop()[1];
+let toastT=0;function award(n,why){save.points+=n;persist();const T=document.getElementById('toast');T.textContent=`+${n} ${why}`;T.style.opacity=1;toastT=2}
+function buildSign(g){const p=new THREE.Mesh(new THREE.BoxGeometry(.3,9,.3),new THREE.MeshBasicMaterial({color:0xfff2a0}));p.position.set(SIGN.x,4.5,SIGN.z);g.add(p);
+ const pl=new THREE.PointLight(0xfff0a0,2,20);pl.position.set(SIGN.x,3,SIGN.z);g.add(pl);
+ THEMES.forEach((th,i)=>{const cv=document.createElement('canvas');cv.width=256;cv.height=48;const x=cv.getContext('2d');x.fillStyle='#c9b44a';x.fillRect(0,0,256,48);x.fillStyle='#1a1500';x.font='bold 22px monospace';x.fillText(th.name+' →',10,32);
+  const a=new THREE.Mesh(new THREE.PlaneGeometry(2.4,.45),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv),side:THREE.DoubleSide}));const ang=i*Math.PI/3;
+  a.position.set(SIGN.x+Math.cos(ang)*1.2,1.6+i*.5,SIGN.z+Math.sin(ang)*1.2);a.rotation.y=-ang;g.add(a)});
+ walls.push({x0:SIGN.x-.3,x1:SIGN.x+.3,z0:SIGN.z-.3,z1:SIGN.z+.3,cell:'0,-1'})}
+const dirName=a=>['E','SE','S','SW','W','NW','N','NE'][((Math.round(a/(Math.PI/4))%8)+8)%8];
+function wallBox(grp,x,z,w,d,hh=H,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,hh,d),mat||grp.userData.th.wall);m.position.y=hh/2;m.position.x=x;m.position.z=z;grp.add(m);walls.push({x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2,cell:grp.userData.key})}
+function buildCell(cx,cz){const key=cx+','+cz;if(cells.has(key))return;const safe=isHub(cx,cz);const th=themeOf(cx,cz);const g=new THREE.Group();g.userData.key=key;g.userData.th=th;const ox=cx*C,oz=cz*C;
+ const f=new THREE.Mesh(new THREE.PlaneGeometry(C,C),th.floor);f.rotation.x=-Math.PI/2;f.position.set(ox+C/2,0,oz+C/2);g.add(f);
+ const c=new THREE.Mesh(new THREE.PlaneGeometry(C,C),th.ceil);c.rotation.x=Math.PI/2;c.position.set(ox+C/2,H,oz+C/2);g.add(c);
+ for(let i=0;i<2;i++)for(let j=0;j<2;j++){if(rnd(cx,cz,10+i*2+j)<.15)continue;const l=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.6),lightMats[th.light]||(lightMats[th.light]=new THREE.MeshBasicMaterial({color:th.light})));l.rotation.x=Math.PI/2;l.position.set(ox+3+i*6,H-.01,oz+3+j*6);l.userData.flick=rnd(cx,cz,20+i)<.1;g.add(l)}
  // walls on west & south edges with door gaps; plus interior partitions
- const T=.3;for(const side of [0,1]){const r=rnd(cx,cz,side);if(r<.35)continue;const gap=2+rnd(cx,cz,side+5)*(C-6),gw=1.8;
+ const T=.3;for(const side of [0,1]){const r=rnd(cx,cz,side);if(safe||r>th.walls)continue;const gap=2+rnd(cx,cz,side+5)*(C-6),gw=1.8;
   if(side==0){wallBox(g,ox,oz+gap/2,T,gap);wallBox(g,ox,oz+gap+gw+(C-gap-gw)/2,T,C-gap-gw)}else{wallBox(g,ox+gap/2,oz,gap,T);wallBox(g,ox+gap+gw+(C-gap-gw)/2,oz,C-gap-gw,T)}}
- if(rnd(cx,cz,3)<.4){const px=ox+3+rnd(cx,cz,4)*6,pz=oz+3+rnd(cx,cz,6)*6;wallBox(g,px,pz,rnd(cx,cz,7)<.5?4:1,rnd(cx,cz,7)<.5?1:4)}
- if(rnd(cx,cz,8)<.6){const p=new THREE.Mesh(new THREE.BoxGeometry(1.2,H,1.2),M.wall);p.position.set(ox+C/2,H/2,oz+C/2);g.add(p);walls.push({x0:ox+C/2-.6,x1:ox+C/2+.6,z0:oz+C/2-.6,z1:oz+C/2+.6,cell:key})}
- const near0=Math.abs(cx)+Math.abs(cz)<2, r9=rnd(cx,cz,9);
- if(!near0&&r9<.035)addTV(g,ox,oz,key);else if(!near0&&r9<.07)addExit(g,ox,oz,key);
+ if(!safe&&rnd(cx,cz,3)<th.parts){const px=ox+3+rnd(cx,cz,4)*6,pz=oz+3+rnd(cx,cz,6)*6;wallBox(g,px,pz,rnd(cx,cz,7)<.5?4:1,rnd(cx,cz,7)<.5?1:4)}
+ if(!safe&&rnd(cx,cz,8)<th.pillars){const p=new THREE.Mesh(new THREE.BoxGeometry(1.2,H,1.2),th.wall);p.position.set(ox+C/2,H/2,oz+C/2);g.add(p);walls.push({x0:ox+C/2-.6,x1:ox+C/2+.6,z0:oz+C/2-.6,z1:oz+C/2+.6,cell:key})}
+ if(!safe&&th.pool){const w=new THREE.Mesh(new THREE.PlaneGeometry(C-4,C-4),water);w.rotation.x=-Math.PI/2;w.position.set(ox+C/2,.03,oz+C/2);w.userData.water=1;g.add(w)}
+ if(!safe&&th.cubes)for(const[a,b]of[[3,3],[9,3],[3,9],[9,9]]){if(rnd(cx,cz,30+a+b)<.3)continue;wallBox(g,ox+a-1,oz+b,.1,2,1.4,deskM);wallBox(g,ox+a,oz+b-1,2,.1,1.4,deskM);wallBox(g,ox+a+.3,oz+b+.3,1.2,.7,.75,deskM)}
+ if(!safe&&th.crates)for(let i=0;i<3;i++){if(rnd(cx,cz,40+i)<.5)continue;const s=1+rnd(cx,cz,50+i);wallBox(g,ox+2+rnd(cx,cz,60+i)*8,oz+2+rnd(cx,cz,70+i)*8,s,s,s,crateM)}
+ if(!safe&&rnd(cx,cz,80)<.5){const ok=save.level+':'+key;if(!save.orbs[ok]){const o=new THREE.Mesh(orbG,orbM);o.position.set(ox+2+rnd(cx,cz,81)*8,1,oz+2+rnd(cx,cz,82)*8);o.userData.orb=ok;g.add(o);orbs.push({m:o,id:ok,cell:key})}}
+ if(cx==0&&cz==-1)buildSign(g);
+ const near0=safe, r9=rnd(cx,cz,9);
+ let ad;if(!near0&&r9<.06&&(ad=pickAd(rnd(cx,cz,11),th.name)))addAd(g,ox,oz,key,ad);else if(!near0&&r9<.07)addExit(g,ox,oz,key);
  S.add(g);cells.set(key,g)}
+// ===== ADS =====
+// Each ad: id, advertiser, text, link, maxViews (image optional). House ads for Isaac's apps.
+// TODO(server): view counts are per-device in localStorage only. Replace adViews()/countView() with a shared
+// server counter (e.g. Cloudflare Worker + KV: GET /ads -> remaining views, POST /ads/:id/view) so maxViews is global.
+const ADS=[
+ {id:'creator-reel',advertiser:'Featured creator',text:'▶ WATCH REEL',sub:'creator video on Facebook',link:REEL,maxViews:1000,color:'#1877f2',tv:1},
+ {id:'stellartimelock',advertiser:'HOUSE AD · StellarTimeLock',text:'Time-lock your crypto',sub:'Self-custody vaults on Stellar',link:'https://stellartimelock.com/',maxViews:5000,color:'#1a2a4a'},
+ {id:'flipsend',advertiser:'HOUSE AD · FlipSend',text:'Flip files to any device',sub:'flipsend.stellartimelock.com',link:'https://flipsend.stellartimelock.com/',maxViews:5000,color:'#0a4a5a'},
+ {id:'files',advertiser:'HOUSE AD · FILES+',text:'Your files, everywhere',sub:'files.stellartimelock.com',link:'https://files.stellartimelock.com/',maxViews:5000,color:'#2a3a5a'},
+ {id:'music',advertiser:'HOUSE AD · Music',text:'Music by StellarTimeLock',sub:'On Google Play',link:'https://stellartimelock.com/music/',maxViews:5000,color:'#4a1a5a'},
+ {id:'video',advertiser:'HOUSE AD · Video',text:'Video by StellarTimeLock',sub:'On Google Play',link:'https://stellartimelock.com/video/',maxViews:5000,color:'#5a1a1a'},
+ {id:'write',advertiser:'HOUSE AD · Write',text:'Write by StellarTimeLock',sub:'On Google Play',link:'https://stellartimelock.com/write/',maxViews:5000,color:'#2a5a2a'},
+ {id:'sourceify',advertiser:'HOUSE AD · Sourceify',text:'Sourceify by StellarTimeLock',sub:'stellartimelock.com',link:'https://stellartimelock.com/',maxViews:5000,color:'#6a4a10'}];
+const adViews=()=>JSON.parse(localStorage.getItem('br_adviews')||'{}');
+function countView(ad){const v=adViews();v[ad.id]=(v[ad.id]||0)+1;localStorage.setItem('br_adviews',JSON.stringify(v))}
+const HINT={'Level 0':['creator-reel','stellartimelock'],'Parking Garage':['flipsend','files'],'Pool Rooms':['music','video'],'Endless Office':['write','sourceify'],'Red Hall':['video','creator-reel'],'Warehouse':['files','sourceify']};
+function pickAd(r,th){const v=adViews();let ok=ADS.filter(a=>(v[a.id]||0)<a.maxViews);const pref=ok.filter(a=>(HINT[th]||[]).includes(a.id));if(pref.length&&r<.5)return pref[Math.floor(r*2*pref.length)];return ok.length?ok[Math.floor(r*ok.length)]:null}
+window.__ads={ADS,adViews,interact};
+function addAd(g,ox,oz,key,ad){const cv=document.createElement('canvas');cv.width=256;cv.height=192;const x=cv.getContext('2d');x.fillStyle='#111';x.fillRect(0,0,256,192);x.fillStyle=ad.color;x.fillRect(12,12,232,140);x.fillStyle='#fff';x.font='11px monospace';x.fillText(ad.advertiser,20,30);x.font='bold 18px monospace';x.fillText(ad.text,20,80);x.font='13px monospace';x.fillText(ad.sub,20,110);x.fillStyle='#e8dc9a';x.fillText('tap USE / press E',60,175);
+ const m=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.2,.4),[M.wall,M.wall,M.wall,M.wall,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv)}),M.wall]);m.position.set(ox+C/2,1.4,oz+C/2+.81);g.add(m);interact.push({type:'ad',ad,seen:false,pos:m.position,cell:key})}
 function addTV(g,ox,oz,key){const cv=document.createElement('canvas');cv.width=256;cv.height=192;const x=cv.getContext('2d');x.fillStyle='#111';x.fillRect(0,0,256,192);x.fillStyle='#1877f2';x.fillRect(16,16,224,120);x.fillStyle='#fff';x.font='bold 22px monospace';x.fillText('▶ WATCH REEL',40,70);x.font='14px monospace';x.fillText('creator video on Facebook',30,100);x.fillStyle='#e8dc9a';x.fillText('tap / press E to open',40,170);
  const tv=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.2,.4),[M.wall,M.wall,M.wall,M.wall,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv)}),M.wall]);tv.position.set(ox+C/2,1.4,oz+C/2+.81);g.add(tv);interact.push({type:'tv',pos:tv.position,cell:key})}
 function addExit(g,ox,oz,key){const d=new THREE.Mesh(new THREE.BoxGeometry(1.4,2.4,.15),M.exit);d.position.set(ox+C/2,1.2,oz+C/2+.68);g.add(d);const pl=new THREE.PointLight(0x40ff70,1,6);pl.position.copy(d.position).add(new THREE.Vector3(0,0,1));g.add(pl);interact.push({type:'exit',pos:d.position,cell:key})}
-function clearWorld(){for(const g of cells.values())S.remove(g);cells.clear();walls.length=0;interact.length=0}
+function clearWorld(){for(const g of cells.values())S.remove(g);cells.clear();walls.length=0;interact.length=0;orbs.length=0}
 function stream(){const cx=Math.floor(cam.position.x/C),cz=Math.floor(cam.position.z/C),r=3;
  for(let i=-r;i<=r;i++)for(let j=-r;j<=r;j++)buildCell(cx+i,cz+j);
- for(const [k,g] of cells){const [a,b]=k.split(',').map(Number);if(Math.abs(a-cx)>r+1||Math.abs(b-cz)>r+1){S.remove(g);g.traverse(o=>o.geometry&&o.geometry.dispose());cells.delete(k);for(let i=walls.length-1;i>=0;i--)if(walls[i].cell==k)walls.splice(i,1);for(let i=interact.length-1;i>=0;i--)if(interact[i].cell==k)interact.splice(i,1)}}}
+ for(const [k,g] of cells){const [a,b]=k.split(',').map(Number);if(Math.abs(a-cx)>r+1||Math.abs(b-cz)>r+1){S.remove(g);g.traverse(o=>o.geometry&&o.geometry.dispose());cells.delete(k);for(let i=walls.length-1;i>=0;i--)if(walls[i].cell==k)walls.splice(i,1);for(let i=interact.length-1;i>=0;i--)if(interact[i].cell==k)interact.splice(i,1);for(let i=orbs.length-1;i>=0;i--)if(orbs[i].cell==k)orbs.splice(i,1)}}}
 // input
 const keys={};let yaw=0,pitch=0,paused=true,joy={x:0,y:0};
-addEventListener('keydown',e=>{keys[e.code]=1;if(e.code=='KeyE')use()});addEventListener('keyup',e=>keys[e.code]=0);
+const KM={w:'KeyW',a:'KeyA',s:'KeyS',d:'KeyD',e:'KeyE'};const kc=e=>e.code||KM[(e.key||'').toLowerCase()]||e.key;
+addEventListener('keydown',e=>{keys[kc(e)]=1;if(e.key&&KM[e.key.toLowerCase()])keys[KM[e.key.toLowerCase()]]=1;if(/^Arrow/.test(e.key))e.preventDefault();if(kc(e)=='KeyE')use();if(kc(e)=='KeyF')cycleLight()});addEventListener('keyup',e=>{keys[kc(e)]=0;if(e.key&&KM[e.key.toLowerCase()])keys[KM[e.key.toLowerCase()]]=0});addEventListener('blur',()=>{for(const k in keys)keys[k]=0});
 R.domElement.addEventListener('click',()=>{if(!paused&&!touch)R.domElement.requestPointerLock()});
 addEventListener('mousemove',e=>{if(document.pointerLockElement){yaw-=e.movementX*.0025;pitch=Math.max(-1.4,Math.min(1.4,pitch-e.movementY*.0025))}});
 const touch='ontouchstart' in window;let joyId=null,lookId=null,lx=0,ly=0;const J=document.getElementById('joy'),K=document.getElementById('knob');
 if(touch){J.style.display='block';document.getElementById('act').style.display='block'}
-addEventListener('touchstart',e=>{for(const t of e.changedTouches){if(t.target.closest('button,a,.card'))continue;if(t.clientX<innerWidth/2&&joyId===null){joyId=t.identifier}else if(lookId===null){lookId=t.identifier;lx=t.clientX;ly=t.clientY}}},{passive:true});
-addEventListener('touchmove',e=>{for(const t of e.changedTouches){if(t.identifier===joyId){const r=J.getBoundingClientRect();let dx=t.clientX-(r.left+60),dy=t.clientY-(r.top+60);const m=Math.hypot(dx,dy);if(m>50){dx*=50/m;dy*=50/m}joy={x:dx/50,y:dy/50};K.style.transform=`translate(${dx}px,${dy}px)`}else if(t.identifier===lookId){yaw-=(t.clientX-lx)*.005;pitch=Math.max(-1.4,Math.min(1.4,pitch-(t.clientY-ly)*.005));lx=t.clientX;ly=t.clientY}}},{passive:true});
-addEventListener('touchend',e=>{for(const t of e.changedTouches){if(t.identifier===joyId){joyId=null;joy={x:0,y:0};K.style.transform=''}if(t.identifier===lookId)lookId=null}});
-document.getElementById('act').onclick=use;
+addEventListener('touchstart',e=>{for(const t of e.changedTouches){if(t.target.closest('button,a,.card'))continue;if(t.clientX<innerWidth/2&&joyId===null){joyId=t.identifier;const r=J.getBoundingClientRect();J.dataset.cx=(t.clientX>r.left&&t.clientX<r.right&&t.clientY>r.top&&t.clientY<r.bottom)?r.left+60:t.clientX;J.dataset.cy=(t.clientX>r.left&&t.clientX<r.right&&t.clientY>r.top&&t.clientY<r.bottom)?r.top+60:t.clientY}else if(lookId===null){lookId=t.identifier;lx=t.clientX;ly=t.clientY}}},{passive:true});
+addEventListener('touchmove',e=>{if(!e.target.closest('.card'))e.preventDefault();for(const t of e.changedTouches){if(t.identifier===joyId){let dx=t.clientX-J.dataset.cx,dy=t.clientY-J.dataset.cy;const m=Math.hypot(dx,dy);if(m>50){dx*=50/m;dy*=50/m}joy={x:dx/50,y:dy/50};K.style.transform=`translate(${dx}px,${dy}px)`}else if(t.identifier===lookId){yaw-=(t.clientX-lx)*.005;pitch=Math.max(-1.4,Math.min(1.4,pitch-(t.clientY-ly)*.005));lx=t.clientX;ly=t.clientY}}},{passive:false});
+const tend=e=>{for(const t of e.changedTouches){if(t.identifier===joyId){joyId=null;joy={x:0,y:0};K.style.transform=''}if(t.identifier===lookId)lookId=null}};addEventListener('touchend',tend);addEventListener('touchcancel',tend);
+document.getElementById('act').onclick=use;document.getElementById('lt').onclick=cycleLight;
 // hum
 let actx;function hum(){actx=new AudioContext();const o=actx.createOscillator(),o2=actx.createOscillator(),gn=actx.createGain();o.type='sawtooth';o.frequency.value=60;o2.type='sine';o2.frequency.value=120;gn.gain.value=.025;o.connect(gn);o2.connect(gn);gn.connect(actx.destination);o.start();o2.start()}
 // interaction
 let nearby=null;const P=document.getElementById('prompt'),MOD=document.getElementById('modal'),MC=document.getElementById('mc');
-function use(){if(!nearby||paused)return;if(nearby.type=='tv'){open(`<h2>📺 A TV flickers on...</h2><p>Someone left a video playing in here.</p><p><a href="${REEL}" target="_blank" rel="noopener">▶ Watch the creator's reel on Facebook</a></p><button onclick="closeM()">Back to the rooms</button>`)}else game()}
+function use(){if(!nearby||paused)return;if(nearby.type=='ad'){const a=nearby.ad;open(`<h2>${a.tv?'📺 A TV flickers on...':'🪧 '+a.advertiser}</h2><p>${a.text}<br><small>${a.sub}</small></p><p><a href="${a.link}" target="_blank" rel="noopener">${a.tv?"▶ Watch the creator's reel on Facebook":'Visit '+a.advertiser.replace('HOUSE AD · ','')}</a></p><button onclick="closeM()">Back to the rooms</button>`)}else game()}
 window.closeM=()=>{MOD.style.display='none';paused=false};
 function open(h){paused=true;document.exitPointerLock?.();MOD.style.display='flex';MC.innerHTML=h}
 function win(){save.level++;save.best=Math.max(save.best,save.level);persist();open(`<h2>Level ${save.level}</h2><p>You slip through the door. The hum changes pitch.</p><button onclick="closeM()">Continue</button>`);clearWorld();cam.position.set(C/2,1.6,C/2);S.fog.color.setHSL(.13,.4,.12-Math.min(save.level,8)*.01);S.background.copy(S.fog.color)}
@@ -100,20 +159,26 @@ function coins(){open(`<h2>EXIT TEST: Catch 10 coins</h2><p>Drag / move to steer
   items=items.filter(i=>!i.dead);g.fillStyle='#e8dc9a';g.fillText('missed '+miss+'/5',8,14);if(sc>=10){end=1;return win()}if(miss>=5){end=1;return lose()}requestAnimationFrame(f)})()}
 // loop
 const clock=new THREE.Clock(),fwd=new THREE.Vector3(),rt=new THREE.Vector3();
-function collide(p){const r=.35;for(const w of walls){if(p.x>w.x0-r&&p.x<w.x1+r&&p.z>w.z0-r&&p.z<w.z1+r)return true}return false}
+function collide(p,from){if(from&&hit(from))return false;return hit(p)}
+function hit(p){const r=.35;for(const w of walls){if(p.x>w.x0-r&&p.x<w.x1+r&&p.z>w.z0-r&&p.z<w.z1+r)return true}return false}
 function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;
  if(!paused){cam.rotation.set(pitch,yaw,0);fwd.set(-Math.sin(yaw),0,-Math.cos(yaw));rt.set(Math.cos(yaw),0,-Math.sin(yaw));
   let f=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0)-joy.y,s=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x;
   const sp=(keys.ShiftLeft?5:3)*dt,mv=fwd.clone().multiplyScalar(f*sp).add(rt.clone().multiplyScalar(s*sp));
-  const nx=cam.position.clone();nx.x+=mv.x;if(!collide(nx))cam.position.x=nx.x;nx.copy(cam.position);nx.z+=mv.z;if(!collide(nx))cam.position.z=nx.z;
+  window.__cam=cam;const nx=cam.position.clone();nx.x+=mv.x;if(!collide(nx,cam.position))cam.position.x=nx.x;nx.copy(cam.position);nx.z+=mv.z;if(!collide(nx,cam.position))cam.position.z=nx.z;
   if(f||s){save.steps+=sp;cam.position.y=1.6+Math.sin(t*9)*.03}
-  stream();nearby=null;for(const it of interact)if(it.pos.distanceTo(cam.position)<2.6){nearby=it;break}
-  P.style.display=nearby?'block':'none';if(nearby)P.textContent=nearby.type=='tv'?(touch?'Tap USE to watch':'Press E to watch'):(touch?'Tap USE: pass a test to go deeper':'Press E: pass a test to go deeper');
+  stream();nearby=null;for(const it of interact){const d=it.pos.distanceTo(cam.position);if(it.type=='ad'&&!it.seen&&d<4){it.seen=true;countView(it.ad);award(25,'ad viewed')}if(d<2.6&&!nearby)nearby=it}
+  for(let i=orbs.length-1;i>=0;i--){const o=orbs[i];o.m.position.y=1+Math.sin(t*3+i)*.15;if(o.m.position.distanceTo(cam.position)<1.2){o.m.parent.remove(o.m);save.orbs[o.id]=1;orbs.splice(i,1);award(10,'orb')}}
+  const sd=Math.hypot(cam.position.x-SIGN.x,cam.position.z-SIGN.z);if(sd<4){if(!save.sign){save.sign=1;award(50,'found the signpost')}if(!nearby){P.style.display='block';P.innerHTML=THEMES.map((th,i)=>`${dirName(i*Math.PI/3)} → ${th.name} <small>(${(HINT[th.name]||[]).join(', ')})</small>`).join('<br>');}}
+  const th=themeOf(Math.floor(cam.position.x/C),Math.floor(cam.position.z/C));if(!save.themes[th.name]){save.themes[th.name]=1;if(th!==THEMES[0])award(100,'new area: '+th.name)}if(window.__th!==th){window.__th=th;S.fog.color.setHex(th.dark?0x0c0a08:0x2a2410);S.background.copy(S.fog.color)}
+  P.style.display=nearby?'block':'none';P.style.fontSize='15px';if(nearby)P.textContent=nearby.type=='ad'?(touch?'Tap USE to watch':'Press E to watch'):(touch?'Tap USE: pass a test to go deeper':'Press E: pass a test to go deeper');
   for(const g of cells.values())for(const o of g.children)if(o.userData.flick)o.visible=Math.random()>.08;
   if(Math.floor(t)%5==0)persist()}
- document.getElementById('hud').textContent=`LEVEL ${save.level}  ·  ${Math.floor(save.steps)}m walked  ·  deepest ${save.best}`;
+ if(toastT>0){toastT-=dt;if(toastT<=0)document.getElementById('toast').style.opacity=0}
+ flash.color.setHex(LIGHTS[save.light%LIGHTS.length][1]);
+ document.getElementById('hud').textContent=`⭐ ${save.points} · ${rank()} · ${(window.__th||THEMES[0]).name.toUpperCase()} · LEVEL ${save.level}  ·  ${Math.floor(save.steps)}m walked  ·  deepest ${save.best}`;
  R.render(S,cam)}
 document.getElementById('go').onclick=()=>{document.getElementById('start').style.display='none';paused=false;try{hum()}catch(e){}if(!touch)R.domElement.requestPointerLock()};
-document.getElementById('reset').onclick=()=>{save={level:0,best:0,steps:0};persist()};
+document.getElementById('reset').onclick=()=>{save={level:0,best:0,steps:0,points:0,orbs:{},themes:{},sign:0,light:0};persist()};
 stream();loop();
 </script></body></html>
