@@ -91,7 +91,9 @@ a:hover { color: #4ecdc4; }
 
 .nav-links {
   display: flex;
-  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 32px;
   align-items: center;
 }
 .nav-links a {

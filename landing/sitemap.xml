@@ -26,14 +26,29 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://stellartimelock.com/music/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://stellartimelock.com/music/privacy/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://stellartimelock.com/video/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://stellartimelock.com/video/privacy/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://stellartimelock.com/write/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://stellartimelock.com/write/privacy/</loc>
