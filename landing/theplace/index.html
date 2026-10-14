@@ -8,29 +8,46 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--blue:#0a6fd6;--blue-deep:#0756a8;--yellow:#ffd400;--red:#d62828;--ink:#123a6b;--muted:#d7e8ff;--card:#fff;--space:1.35rem}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--blue);color:#fff;line-height:1.6}
-h1,h2,h3{font-family:"Fredoka",system-ui,sans-serif;line-height:1.15;font-weight:700;color:var(--yellow)}
-a{color:var(--yellow)}
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden;max-width:100%}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--blue);color:#fff;line-height:1.6}
+h1,h2,h3,h4{font-family:"Fredoka",system-ui,sans-serif;line-height:1.15;font-weight:700;color:var(--yellow)}
+a{color:var(--yellow)}img,iframe,table,video{max-width:100%}
 .banner{background:var(--blue-deep);color:#fff;text-align:center;font-size:.8rem;padding:8px 16px;letter-spacing:.02em}
 .storefront{display:block;width:100%;height:auto;background:#87b8ef}
 .intro{text-align:center;padding:36px 22px 40px;border-top:4px solid var(--red)}
-.intro h1{margin:0 0 10px;font-size:clamp(2rem,5.4vw,3.25rem);letter-spacing:.01em}
+.intro h1{margin:0 0 10px;font-size:clamp(1.7rem,5.4vw,3.25rem);letter-spacing:.01em}
 .intro p{margin:8px 0;font-size:1.05rem}
 .btn{display:inline-block;background:var(--yellow);color:var(--blue);font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none;margin:18px 6px 0;border:2px solid var(--yellow)}
 .btn.alt{background:transparent;color:#fff;border-color:#fff}
 main{max-width:980px;margin:auto;padding:12px 22px 48px}section{margin:56px 0}
 h2{border-bottom:3px solid var(--yellow);box-shadow:0 3px 0 var(--red);padding-bottom:8px;margin:0 0 18px;font-size:1.75rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:var(--space)}
 .card{background:var(--card);color:var(--ink);border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px #00000022}
-.card h3{margin:0 0 10px;font-size:1.25rem;color:var(--blue)}
+.card h3,.card h4{margin:0 0 10px;font-size:1.2rem;color:var(--blue)}
+.card h4{margin-top:18px;font-size:1.05rem}
 .card ul{padding-left:18px;margin:0}.card li+li{margin-top:.35rem}
 .card .note,.card a{color:#4d6a8c}.note{color:var(--muted);font-size:.85rem}
+.menu-list{list-style:none;padding:0;margin:0}
+.menu-list li{padding:9px 0;border-bottom:1px solid #dbe7f5}
+.menu-list li:last-child{border-bottom:0}
+.menu-list strong{display:block;color:var(--ink)}
+.menu-list span{display:block;font-size:.92rem;color:#4d6a8c}
 table{border-collapse:collapse;width:100%;max-width:420px;background:#fff;color:var(--ink);border-radius:14px;overflow:hidden}td{padding:10px 16px;border-bottom:1px solid #dbe7f5}
 .photos figure{margin:0}.photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;display:block;box-shadow:0 2px 10px #00000022;border:3px solid var(--yellow)}
 blockquote{margin:0;font-style:italic}iframe{width:100%;height:340px;border:0;border-radius:14px}
-.callbar{position:fixed;bottom:0;left:0;right:0;background:var(--blue-deep);border-top:3px solid var(--red);text-align:center;padding:10px;display:none}
+.callbar{position:fixed;bottom:0;left:0;right:0;background:var(--blue-deep);border-top:3px solid var(--red);text-align:center;padding:10px;display:none;z-index:2}
 .callbar a{color:var(--yellow);font-weight:700;text-decoration:none;font-size:1.1rem}
-@media(max-width:700px){.callbar{display:block}body{padding-bottom:56px}.intro{padding:28px 16px 32px}}
+@media(max-width:700px){
+  .callbar{display:block}body{padding-bottom:56px}
+  .intro{padding:22px 16px 26px}
+  main{padding:8px 16px 40px}section{margin:36px 0}
+  .storefront{height:220px;object-fit:cover;object-position:center 38%}
+  .photos{grid-template-columns:1fr 1fr;gap:10px}
+  .photos img{height:160px;aspect-ratio:auto}
+  .card{padding:16px}
+  iframe{height:240px}
+  h2{font-size:1.45rem}
+}
 footer{text-align:center;color:var(--muted);font-size:.8rem;padding:36px 22px 48px;line-height:1.6}
 footer a{color:var(--yellow)}
 </style></head><body>
@@ -46,27 +63,205 @@ footer a{color:var(--yellow)}
 </div>
 </header>
 <main>
-<section id="menu"><h2>Menu highlights</h2>
-<p class="note">Item names from the restaurant's published menu listing (SinglePlatform). Prices change; please call for current prices and specials.</p>
+<section id="menu"><h2>Menu</h2>
+<p class="note">Items and descriptions are from the restaurant’s SinglePlatform listing for <strong>3518 E. Route 66, Flagstaff</strong> (East location only), also published on OpenTable. OpenTable shows that listing last updated <strong>December 17, 2021</strong>. No priced menu from about 2023 or later was found for this East location, so prices are omitted. Please call for current prices and specials.</p>
+<p class="note">You may substitute cottage cheese, tomatoes or fruit in place of either bread or hash browns. Egg whites available upon request. Additional charge on to-go orders. Items marked * may be served undercooked; consuming raw or undercooked meats, poultry, seafood, shellfish or eggs may increase your risk of foodborne illness.</p>
+
 <div class="grid">
-<div class="card"><h3>Breakfast</h3><ul>
-<li>Hungry Man Special — 3 eggs, ham/bacon/sausage, hash browns, biscuit &amp; gravy, toast or pancakes</li>
-<li>Meat &amp; 2 Eggs (sausage, bacon, ham, corned beef hash, chorizo, Polish sausage)</li>
-<li>Chicken Fried Steak &amp; Eggs</li><li>Breakfast Steak — 16 oz sirloin &amp; eggs</li>
-<li>3-Egg Omelettes: Cheese, Arizona, Sirloin Strip, Build Your Own</li>
-<li>Biscuits &amp; Gravy</li><li>Pancakes, French Toast &amp; Belgian Waffles</li><li>Sirloin Strip Burro</li></ul></div>
-<div class="card"><h3>Burgers &amp; Sandwiches</h3><ul>
-<li>1/2 lb Hamburger &amp; Double Burger</li><li>Turkey Burger</li><li>Chili Size</li>
-<li>Patty Melt, Frisco Melt, Reuben</li><li>Club, BLT, Philly</li><li>Avocado Swiss Chicken Sandwich</li><li>Green Chili Burrito</li><li>Rib-Eye Steak Sandwich</li></ul>
-<p class="note">Served with fries, potato salad, green salad or soup.</p></div>
-<div class="card"><h3>Dinners</h3><ul>
-<li>Chicken Fried Steak</li><li>Pork Chops</li><li>12 oz Rib Eye Steak</li><li>16 oz Top Sirloin</li>
-<li>BBQ Baby Back Ribs</li><li>Fisherman's Platter</li><li>Southwest Grilled Chicken Breast</li><li>Spaghetti &amp; Meatballs</li></ul>
-<p class="note">With vegetable, AZ toast, potato, and soup or salad.</p></div>
-<div class="card"><h3>Soups, Salads &amp; More</h3><ul>
-<li>Chili with Beans · Pork Green Chili</li><li>Chef, Taco &amp; Grilled Chicken Caesar Salads</li>
-<li>Kids: Jr. Hot Dog, Jr. Corn Dog, Jr. Spaghetti</li><li>Homemade Pies · Ice Cream</li></ul></div>
-</div></section>
+<div class="card"><h3>Hungry Man Special</h3>
+<ul class="menu-list">
+<li><strong>Hungry Man Special</strong><span>Choice of ham, bacon or sausage. 3 eggs*, hash browns and choice of biscuit &amp; gravy, toast or pancakes</span></li>
+</ul>
+<h4>Meat &amp; Eggs</h4>
+<p class="note">Choice of: sausage (link or patty), bacon, diced ham in scrambled eggs, ham, corned beef hash, chorizo, Polish sausage</p>
+<ul class="menu-list">
+<li><strong>With 2 Eggs*</strong><span>Hash browns or diced potatoes and choice of biscuits &amp; gravy, toast, pancakes or tortilla</span></li>
+<li><strong>1/2 Lb Angus Chuck Beef Patty*</strong></li>
+<li><strong>Pork Chop*</strong></li>
+</ul>
+<h4>3-Egg Omelettes*</h4>
+<p class="note">Served with hash browns or diced potatoes, and choice of biscuit &amp; gravy, toast, pancakes or tortilla</p>
+<ul class="menu-list">
+<li><strong>Cheese</strong></li>
+<li><strong>Arizona</strong><span>Ham, bell peppers and cheese</span></li>
+<li><strong>Build Your Own</strong><span>Choice of one meat: ham, chorizo, bacon, sausage or chicken (additional meat extra). Choice of cheddar, Swiss, American or pepper jack. Choice of three: green chili, jalapeños, onions, spinach, broccoli, mushrooms, avocado, bell peppers, tomatoes, sour cream (additional vegetable extra)</span></li>
+<li><strong>Top Sirloin Strip Omelet</strong><span>3 oz of sirloin*</span></li>
+</ul>
+</div>
+
+<div class="card"><h3>More breakfast</h3>
+<ul class="menu-list">
+<li><strong>Top Sirloin Strips</strong><span>7 oz. of sirloin*, 2 eggs*, hash browns; choice of biscuit &amp; gravy, toast or pancakes</span></li>
+<li><strong>2 Eggs</strong><span>2 eggs*, hash browns; choice of biscuit &amp; gravy, toast, pancakes or tortilla</span></li>
+<li><strong>Biscuits &amp; Gravy</strong><span>Available as 1, 2 or 3 biscuits</span></li>
+<li><strong>Chicken Fried Steak</strong><span>5 oz. or 8 oz. steak, 2 eggs*, hash browns; choice of biscuit &amp; gravy, toast or pancakes</span></li>
+<li><strong>Breakfast Steak</strong><span>16 oz. sirloin*, 2 eggs*, hash browns; choice of biscuit &amp; gravy, toast, pancakes or tortilla</span></li>
+</ul>
+<h4>Pancakes &amp; French toast</h4>
+<ul class="menu-list">
+<li><strong>3 Slices of Texas Toast</strong><span>Fruit and whipped cream available</span></li>
+<li><strong>Short Stack (2) or Short French Toast</strong></li>
+<li><strong>Pancake (1) or One Slice French Toast</strong></li>
+</ul>
+<h4>Breakfast burro</h4>
+<ul class="menu-list">
+<li><strong>2 Eggs*</strong><span>Choice of one meat: ham, chorizo, bacon or sausage. Choice of cheddar, Swiss, American or pepper jack. Choice of three: green chili, jalapeños, onions, spinach, broccoli, mushrooms, bell peppers, avocado, tomato, sour cream. Served with hash browns on the side</span></li>
+<li><strong>Sirloin Strip Burro</strong><span>3 oz of sirloin*</span></li>
+</ul>
+<h4>Meat &amp; egg sandwich</h4>
+<p class="note">Meat, 1 egg* on choice of bread, served with hash browns. Additional charge for cheese</p>
+<ul class="menu-list">
+<li><strong>Ham</strong></li>
+<li><strong>Patty Sausage or Bacon</strong></li>
+</ul>
+<h4>Waffles &amp; more</h4>
+<ul class="menu-list">
+<li><strong>Oatmeal, Cream of Wheat or Grits</strong><span>With raisins, brown sugar and 2% milk</span></li>
+<li><strong>Cold Cereal</strong><span>Assorted</span></li>
+<li><strong>Fruit</strong></li>
+<li><strong>Cinnamon Roll</strong></li>
+<li><strong>Waffle (1)</strong></li>
+<li><strong>Waffle with Fruit and Whipped Cream</strong></li>
+<li><strong>Waffle Breakfast</strong><span>Belgium waffle, with 2 eggs* and choice of ham, bacon or sausage on the side</span></li>
+</ul>
+</div>
+
+<div class="card"><h3>Sandwiches</h3>
+<p class="note">All sandwiches come with a choice of French fries, potato salad, green salad or soup. Onion rings or deep-fried green beans extra.</p>
+<ul class="menu-list">
+<li><strong>French Dip*</strong></li>
+<li><strong>Steak Sandwich</strong><span>16 oz. top sirloin</span></li>
+<li><strong>Green Chili Burrito</strong><span>Pork green chili wrapped in a flour tortilla</span></li>
+<li><strong>BBQ Pork on a Bun</strong></li>
+<li><strong>BLT</strong><span>Bacon, lettuce and tomato</span></li>
+<li><strong>Cold Sandwich (Roast Beef)</strong></li>
+<li><strong>Cold Sandwich (Turkey or Ham)</strong></li>
+<li><strong>Club Sandwich</strong></li>
+<li><strong>Fish Sandwich</strong></li>
+<li><strong>Chicken Fried Steak Sandwich</strong></li>
+<li><strong>Tuna Salad</strong></li>
+<li><strong>3 “S” Special</strong><span>Tuna salad sandwich, soup and salad</span></li>
+<li><strong>Fried Chicken Breast Sandwich</strong></li>
+<li><strong>Grilled Chicken Breast Sandwich</strong></li>
+<li><strong>Chicken Fried Chicken Sandwich</strong></li>
+<li><strong>Vegetable Sandwich</strong><span>On sourdough with ranch dressing, lettuce, tomato, avocado, mushrooms, bell peppers and onions</span></li>
+<li><strong>Avocado Swiss Chicken Sandwich</strong><span>On a bun with bell peppers, mushrooms and onions</span></li>
+<li><strong>Philly Sandwich</strong><span>Sliced beef with bell peppers, onions, mushrooms and Swiss cheese on a hoagie roll</span></li>
+<li><strong>Crispy Chicken Ranch Sandwich</strong><span>Breaded chicken breast with bacon, American cheese and ranch dressing</span></li>
+<li><strong>Polish Sausage Sandwich</strong><span>Two Polish sausage with onions and bell peppers on a hoagie roll with Swiss cheese and a side of marinara sauce</span></li>
+<li><strong>Hot Dogs</strong><span>Two chili cheese dogs topped with cheddar cheese and onions on a hoagie roll</span></li>
+<li><strong>Rib-Eye Steak Sandwich</strong><span>12 oz rib eye steak with your choice of bread, fries, soup or salad</span></li>
+</ul>
+<h4>Add to any sandwich</h4>
+<ul class="menu-list">
+<li><strong>Bacon · Cheddar or Swiss · American or Pepper Jack · Green Chile · Mushrooms · Avocado · BBQ Sauce · Jalapeños</strong></li>
+<li><strong>Sides:</strong><span>Chili cheese fries, French fries, onion rings, side of dressing</span></li>
+</ul>
+</div>
+
+<div class="card"><h3>Burgers</h3>
+<p class="note">1/2 lb fresh ground beef patty. Choice of French fries, potato salad, green salad or soup unless noted. Onion rings, fried green beans or sweet potato fries extra.</p>
+<ul class="menu-list">
+<li><strong>Hamburger*</strong></li>
+<li><strong>Double Burger*</strong></li>
+<li><strong>Turkey Burger*</strong></li>
+<li><strong>Double Turkey Burger*</strong></li>
+<li><strong>Chili Size</strong><span>2 patties* on bun, topped with chili, cheese and onions</span></li>
+<li><strong>Chili Size Junior</strong><span>1 patty* on bun, topped with chili, cheese and onions</span></li>
+<li><strong>Hamburger Special*</strong><span>French fries and a small salad</span></li>
+<li><strong>Double Burger Special*</strong><span>French fries and small salad</span></li>
+<li><strong>Hot Beef with Mashed Potatoes</strong></li>
+<li><strong>Hot Turkey with Mashed Potatoes</strong></li>
+<li><strong>Hot Burger with Mashed Potatoes</strong></li>
+</ul>
+<h4>Melts</h4>
+<ul class="menu-list">
+<li><strong>Turkey Melt*</strong><span>On sourdough with Swiss cheese</span></li>
+<li><strong>Chicken Melt*</strong><span>Grilled chicken breast on sourdough with Swiss cheese</span></li>
+<li><strong>Roast Beef Melt</strong><span>With cheddar cheese and green chilies on sourdough</span></li>
+<li><strong>Patty Melt*</strong><span>On rye with Swiss cheese and grilled onions</span></li>
+<li><strong>Grilled Ham &amp; Cheese</strong><span>On sourdough with American cheese</span></li>
+<li><strong>Grilled Cheese</strong></li>
+<li><strong>Reuben Sandwich</strong><span>On rye with Swiss cheese and sauerkraut</span></li>
+<li><strong>Tuna Melt</strong><span>Choice of bread with American cheese</span></li>
+<li><strong>Avocado Swiss Chicken Melt</strong><span>On grilled sourdough with bell peppers, onions and mushrooms</span></li>
+<li><strong>Chorizo Melt</strong><span>Egg scrambled with chorizo, jalapeños, cheddar cheese on grilled sourdough</span></li>
+<li><strong>Frisco Melt</strong><span>Beef patty with grilled onions and thousand island dressing on sourdough with Swiss cheese</span></li>
+<li><strong>Philly Melt</strong><span>Sliced beef, onions, bell peppers, mushrooms on sourdough with Swiss cheese</span></li>
+<li><strong>Honey Mustard Chicken Melt</strong><span>With grilled onions, bacon and tomatoes on sourdough with Swiss cheese</span></li>
+<li><strong>Buffalo Melt</strong><span>Buffalo sauce and breaded chicken on sourdough with Swiss cheese and a side of ranch</span></li>
+<li><strong>Polish Melt</strong><span>Polish sausage on grilled sourdough with Swiss cheese, onions and bell peppers, side of marinara</span></li>
+</ul>
+</div>
+
+<div class="card"><h3>Salads, chili &amp; soup</h3>
+<ul class="menu-list">
+<li><strong>Crispy Chicken Salad</strong></li>
+<li><strong>Grilled Chicken</strong></li>
+<li><strong>Chef Salad</strong></li>
+<li><strong>1/2 Chef Salad</strong></li>
+<li><strong>Taco Salad</strong></li>
+<li><strong>Grilled Chicken Caesar Salad*</strong></li>
+<li><strong>Small Caesar Salad</strong></li>
+<li><strong>Small Salad</strong></li>
+<li><strong>Potato Salad</strong></li>
+<li><strong>Chili with Beans</strong></li>
+<li><strong>Soup of the Day</strong></li>
+<li><strong>Pork Green Chili</strong></li>
+</ul>
+<h4>Dinners</h4>
+<p class="note">Served with vegetable and Arizona toast, choice of potato, and choice of soup or salad. Baked potato after 5 pm.</p>
+<ul class="menu-list">
+<li><strong>Fisherman’s Platter</strong><span>Flounder, scallop and shrimp (9 oz.)</span></li>
+<li><strong>Chicken Fried Steak</strong><span>5 oz. or 8 oz.</span></li>
+<li><strong>1/2 lb Ground Round</strong><span>Served with brown gravy over top</span></li>
+<li><strong>Pork Chops</strong><span>3–5 oz chops</span></li>
+<li><strong>BBQ Baby Back Pork Ribs</strong></li>
+<li><strong>BBQ Beef Ribs</strong></li>
+<li><strong>12 oz. Rib Eye Steak Dinner</strong></li>
+<li><strong>Chicken Tenders</strong><span>5 pieces</span></li>
+<li><strong>Top Sirloin Steak</strong><span>16 oz.</span></li>
+<li><strong>Southwest Grilled Chicken Breast</strong><span>Two chicken breasts with mushrooms, green chili, onions and Swiss cheese</span></li>
+<li><strong>Spaghetti &amp; Meatballs Dinner</strong></li>
+<li><strong>4 Pieces Fried Chicken Dinner</strong></li>
+<li><strong>Fried Cod Filet Dinner</strong></li>
+</ul>
+</div>
+
+<div class="card"><h3>Kids, specials &amp; desserts</h3>
+<ul class="menu-list">
+<li><strong>Jr. Hot Dog</strong></li>
+<li><strong>Jr. Corn Dog</strong></li>
+<li><strong>Jr. Spaghetti &amp; Meatballs</strong></li>
+<li><strong>Combo Fruit Platter</strong><span>Grapes, honeydew, watermelon, cantaloupe and grapefruit on a bed of green leaf lettuce with cottage cheese</span></li>
+<li><strong>All you can eat fried fish, coleslaw, fries and Arizona toast</strong><span>Served on Fridays from 10:00 am – 9:00 pm</span></li>
+<li><strong>All you can eat chicken wings, fries and Arizona toast</strong><span>Served Saturday night from 4:00 pm – 9:00 pm</span></li>
+<li><strong>Homemade Pies</strong></li>
+<li><strong>Ice Cream</strong></li>
+<li><strong>Strawberry lemonade and Arnold Palmer</strong></li>
+</ul>
+<h4>Breakfast sides</h4>
+<ul class="menu-list">
+<li><strong>Eggs · Toast · English Muffin · Bagel · Tortillas</strong></li>
+<li><strong>Bacon</strong><span>3 slices</span></li>
+<li><strong>Sausage</strong><span>2 links or 2 patties</span></li>
+<li><strong>Polish Sausage · Beef Patty* · Ham · Pork Chop* · Corned Beef Hash · Hash Browns · Diced Potatoes · Cup of Gravy</strong></li>
+</ul>
+<h4>Drinks</h4>
+<ul class="menu-list">
+<li><strong>Coffee</strong><span>Regular or decaf</span></li>
+<li><strong>China Mist Iced Tea</strong></li>
+<li><strong>Soft drinks</strong><span>Lipton raspberry iced tea, Pepsi, Diet Pepsi, root beer, Dr Pepper, Sierra Mist, Mountain Dew, pink lemonade</span></li>
+<li><strong>Child soda</strong></li>
+<li><strong>Hot tea</strong><span>Regular, herbal or green</span></li>
+<li><strong>Juice</strong><span>Orange, apple, grapefruit, cranberry or V8</span></li>
+<li><strong>Child orange juice · Child apple juice</strong></li>
+<li><strong>Hot chocolate · Cappuccino</strong></li>
+<li><strong>Milk · Chocolate milk</strong><span>No refills on milk</span></li>
+</ul>
+</div>
+</div>
+</section>
 <section id="hours"><h2>Hours</h2>
 <table><tr><td>Monday – Saturday</td><td>5:00 AM – 8:00 PM</td></tr><tr><td>Sunday</td><td>6:00 AM – 3:00 PM</td></tr></table>
 <p class="note">Hours as listed online; please call to confirm, especially on holidays.</p></section>
