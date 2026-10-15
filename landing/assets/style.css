@@ -1230,3 +1230,6 @@ a:hover { color: #4ecdc4; }
 @media (min-width: 720px) {
   .survey { padding-top: 48px; }
 }
+
+/* Non-clickable "Coming soon to Google Play" badge (see assets/play-status.js) */
+.play-soon { cursor: default; opacity: .75; pointer-events: none; }

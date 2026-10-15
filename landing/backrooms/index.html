@@ -125,9 +125,9 @@ const ADS=[
  {id:'stellartimelock',advertiser:'HOUSE AD · StellarTimeLock',text:'Time-lock your crypto',sub:'Self-custody vaults on Stellar',link:'https://stellartimelock.com/',maxViews:Infinity,color:'#1a2a4a'},
  {id:'flipsend',advertiser:'HOUSE AD · FlipSend',text:'Flip files to any device',sub:'flipsend.stellartimelock.com',link:'https://flipsend.stellartimelock.com/',maxViews:Infinity,color:'#0a4a5a'},
  {id:'files',advertiser:'HOUSE AD · FILES+',text:'Your files, everywhere',sub:'files.stellartimelock.com',link:'https://files.stellartimelock.com/',maxViews:Infinity,color:'#2a3a5a'},
- {id:'music',advertiser:'HOUSE AD · Music',text:'Music by StellarTimeLock',sub:'On Google Play',link:'https://stellartimelock.com/music/',maxViews:Infinity,color:'#4a1a5a'},
- {id:'video',advertiser:'HOUSE AD · Video',text:'Video by StellarTimeLock',sub:'On Google Play',link:'https://stellartimelock.com/video/',maxViews:Infinity,color:'#5a1a1a'},
- {id:'write',advertiser:'HOUSE AD · Write',text:'Write by StellarTimeLock',sub:'On Google Play',link:'https://stellartimelock.com/write/',maxViews:Infinity,color:'#2a5a2a'},
+ {id:'music',advertiser:'HOUSE AD · Music',text:'Music by StellarTimeLock',sub:'Coming soon to Google Play',link:'https://stellartimelock.com/music/',maxViews:Infinity,color:'#4a1a5a'},
+ {id:'video',advertiser:'HOUSE AD · Video',text:'Video by StellarTimeLock',sub:'Coming soon to Google Play',link:'https://stellartimelock.com/video/',maxViews:Infinity,color:'#5a1a1a'},
+ {id:'write',advertiser:'HOUSE AD · Write',text:'Write by StellarTimeLock',sub:'Coming soon to Google Play',link:'https://stellartimelock.com/write/',maxViews:Infinity,color:'#2a5a2a'},
  {id:'sourceify',advertiser:'HOUSE AD · Sourceify',text:'Sourceify by StellarTimeLock',sub:'stellartimelock.com',link:'https://stellartimelock.com/',maxViews:Infinity,color:'#6a4a10'}];
 const adViews=()=>JSON.parse(localStorage.getItem('br_adviews')||'{}');
 function countView(ad){const v=adViews();v[ad.id]=(v[ad.id]||0)+1;localStorage.setItem('br_adviews',JSON.stringify(v))}

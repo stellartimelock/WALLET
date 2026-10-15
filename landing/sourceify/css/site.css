@@ -193,3 +193,5 @@ footer p {
 footer a {
   font-weight: 700;
 }
+
+.play-soon { cursor: default; opacity: .75; pointer-events: none; }
