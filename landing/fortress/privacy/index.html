@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy policy — Fortress</title>
+    <meta
+      name="description"
+      content="Fortress keeps your vault on your device. StellarTimeLock does not collect it."
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header>
+      <p class="kicker">Fortress by StellarTimeLock</p>
+      <h1>Privacy policy</h1>
+      <p class="lede">
+        Effective October 3, 2026. The vault is local. This page says what that means.
+      </p>
+      <nav>
+        <a href="../">Home</a>
+        <a href="../support/">Support</a>
+        <a href="../delete-account/">Delete your data</a>
+      </nav>
+    </header>
+    <main>
+      <section>
+        <h2>Who we are</h2>
+        <p>
+          Fortress is published by StellarTimeLock. The Android package is
+          <code>com.stellartimelock.stellarvault</code>. Contact
+          <a href="mailto:support@stellartimelock.com">support@stellartimelock.com</a>. This policy
+          covers the Fortress Android app and this website.
+        </p>
+      </section>
+      <section>
+        <h2>Data that stays on your device</h2>
+        <p>
+          Passwords, usernames, notes, recovery codes, authenticator secrets, addresses, card
+          numbers, and passkeys are stored only on your phone, in an encrypted save file
+          (<code>stellar-vault.svault</code>) in a folder you pick. The key comes from your seed or
+          recovery phrase. StellarTimeLock cannot open that file. We do not have an account system,
+          and we do not receive a copy of the vault.
+        </p>
+        <p>
+          Fingerprint or face unlock is a shortcut on that phone. It does not encrypt the save file.
+          If you add a fingerprint, reinstall, or change phones, Fortress asks for the seed again. A
+          backup still opens with the seed alone.
+        </p>
+      </section>
+      <section>
+        <h2>What can leave the device</h2>
+        <p>Nothing leaves the phone unless you do one of these:</p>
+        <ul>
+          <li>
+            <strong>Export or backup.</strong> You pick the folder or the share sheet. We are not
+            the destination.
+          </li>
+          <li>
+            <strong>Send to PC.</strong> You confirm first. One login is handed to the Stellar Send
+            app on the same phone, which copies it to your paired computer.
+          </li>
+          <li>
+            <strong>Breach check.</strong> If you tap Check breached passwords, Fortress sends the
+            first five characters of the SHA-1 hash of a password to Have I Been Pwned
+            (<code>api.pwnedpasswords.com</code>) over HTTPS. The password and the rest of the hash
+            stay on the phone. The request is not tied to your name or email. We do not receive the
+            prefix.
+          </li>
+        </ul>
+        <p>
+          Autofill and the passkey provider fill other apps on the same phone. That data is not
+          uploaded by Fortress.
+        </p>
+      </section>
+      <section>
+        <h2>What we do not do</h2>
+        <p>
+          No ads. No analytics. No crash-reporting account. No sale of data. No advertising ID. The
+          camera is used to scan an authenticator QR code and the picture is not saved. This website
+          does not set tracking cookies and does not ask you to sign in.
+        </p>
+      </section>
+      <section>
+        <h2>Children</h2>
+        <p>Fortress is for adults 18 and older. It is not directed at children.</p>
+      </section>
+      <section>
+        <h2>Deletion</h2>
+        <p>
+          There is no server account to delete. See
+          <a href="../delete-account/">Delete your data</a>.
+        </p>
+      </section>
+      <section>
+        <h2>Changes</h2>
+        <p>
+          If this policy changes, the new date will be on this page. The app will keep treating the
+          vault as local-only unless a future version says otherwise before you update.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p>StellarTimeLock · support@stellartimelock.com</p>
+    </footer>
+  </body>
+</html>

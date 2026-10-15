@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy — Sourceify</title>
+    <meta
+      name="description"
+      content="Sourceify privacy policy. Location is optional. No ads. We do not sell your information."
+    />
+    <link rel="canonical" href="https://sourceify.app/privacy/" />
+    <meta name="theme-color" content="#070B14" />
+    <link rel="icon" href="../favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sourceify" />
+    <meta property="og:title" content="Privacy — Sourceify" />
+    <meta
+      property="og:description"
+      content="How Sourceify uses location, optional sign-in, and community edits. We do not sell your information."
+    />
+    <meta property="og:url" content="https://sourceify.app/privacy/" />
+    <meta property="og:image" content="https://sourceify.app/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Privacy — Sourceify" />
+    <meta name="twitter:image" content="https://sourceify.app/og.png" />
+    <link rel="stylesheet" href="../css/site.css" />
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+    <header class="wrap">
+      <a class="brand" href="../">Sourceify</a>
+      <nav aria-label="Site">
+        <a href="../">Home</a>
+        <a href="../privacy/" aria-current="page">Privacy</a>
+        <a href="../support/">Support</a>
+        <a href="../delete-account/">Delete account</a>
+      </nav>
+    </header>
+    <main id="content" class="wrap">
+      <h1>Privacy</h1>
+      <p class="note">
+        Effective October 3, 2026. This page matches Sourceify version 1.4.1 for Android, package
+        app.stellar.sourceify.
+      </p>
+      <h2>The short version</h2>
+      <p>
+        Sourceify is free. There are no ads. We do not sell your information. We do not share it
+        with advertisers.
+      </p>
+      <p>
+        You can look up help, call, and get directions with no sign-in. There is no Sourceify
+        account server in this version.
+      </p>
+      <h2>Location</h2>
+      <p>
+        The app asks for location only after you tap <strong>Use my location</strong>. You can type
+        a city or ZIP instead. If you say no, the rest of the app still opens.
+      </p>
+      <p>
+        The last place you choose — a city, a ZIP, a dropped pin, or the point from Use my location
+        — stays on this phone so the map and the list can open there next time. That is one place,
+        not a history of where you walked. Saved places are places you chose to keep.
+      </p>
+      <p>
+        When a search goes online, the app does not send your exact pin. It rounds the point to
+        about 1 kilometer (about 0.01 degrees). A health search sends that rounded point and the
+        search distance. Other online searches send a box around that point. The box is as wide as
+        the distance you picked (about 10 miles unless you change it).
+      </p>
+      <p>
+        Play’s form calls a point this precise “precise location,” because 1 kilometer is smaller
+        than 3 square kilometers. The search box is “approximate location.” Both are optional. Both
+        are sent only to run the search or to draw the map. They are not used for ads.
+      </p>
+      <h2>Who receives a search area</h2>
+      <p>
+        This version has no Sourceify server. These hosts are called by the app itself, over HTTPS:
+      </p>
+      <ul>
+        <li>
+          <strong>overpass-api.de</strong> — OpenStreetMap places for the rough area you chose.
+        </li>
+        <li>
+          <strong>gisportal.hrsa.gov</strong> — community health centers, only when a health search
+          runs online. The request uses the rounded point and the search distance.
+        </li>
+        <li>
+          <strong>tiles.openfreemap.org</strong> — map style, tiles, fonts, and sprites, only after
+          you open the map and data saver allows it. Data saver is on by default and skips map tiles
+          on cellular data. The tile request shows the area on the screen.
+        </li>
+        <li>
+          <strong>files.mobilitydatabase.org</strong> — a public list of transit feeds, on Wi-Fi
+          when data saver is off. Your location is not sent.
+        </li>
+        <li>
+          <strong>api.mobilitydatabase.org</strong> — transit feeds for a rough box, only if a
+          Mobility Database token was set when the app was built. This build does not include one.
+        </li>
+        <li>
+          <strong>transit.land</strong> — transit agencies for a rough area, only if a Transitland
+          key was set when the app was built. This build does not include one.
+        </li>
+      </ul>
+      <p>
+        Map data is © OpenStreetMap contributors. Tiles are © OpenMapTiles and OpenFreeMap. There is
+        no Google Maps key.
+      </p>
+      <p>
+        The app sends a User-Agent that names Sourceify and the developer site. It does not send
+        your name, a device advertising ID, or a public IP lookup.
+      </p>
+      <p>
+        Links you tap (a benefit site, the dialer, your own maps app) are opened by the phone. The
+        app’s data layer does not call those sites.
+      </p>
+      <h2>Who the help is for</h2>
+      <p>
+        The first time you open the app, it asks whether you are looking for yourself or for a
+        family, and you can add veteran, youth, women-only, or pets. Those answers stay on this
+        phone. They are used to hide places that do not fit. They are not sent off the phone in this
+        build.
+      </p>
+      <h2>Optional sign-in</h2>
+      <p>
+        Sign in with Stellar is optional. It does not ask for your name, email, or phone number.
+        This build does not include a Stellar Profile server address, so the id stays on this phone.
+        Reputation is a number on this phone. It does not include a name. Sign out deletes the id.
+        See <a href="../delete-account/">Delete account</a>.
+      </p>
+      <p>
+        If a later build sets a Stellar Profile address, sign-in can create an id with that service,
+        and community edits can sync. A photo stays on the phone. A sync of edits uses a point
+        rounded to about 1 kilometer, not an exact pin.
+      </p>
+      <h2>Community edits</h2>
+      <p>
+        Suggest a missing place, report wrong info, claim a listing, edit hours, check a place, or
+        answer “Is this still accurate?” In this build those notes stay on your phone. Other people
+        cannot see them, because no review server is configured.
+      </p>
+      <p>
+        A report does not ask for your name. Do not type your story, your phone number, or an ID
+        number in the note.
+      </p>
+      <p>
+        A claim can ask for an email on the organization’s own website, a code to the phone already
+        on the listing, or the text of a 501(c)(3) letter. In this version the check is not
+        connected, so that information is not sent. The app keeps at most the last four digits of an
+        EIN on the phone. It is not a profile of you.
+      </p>
+      <h2>What stays on the phone</h2>
+      <ul>
+        <li>Language, distance units, data saver, and search distance</li>
+        <li>Places you save</li>
+        <li>Areas you save for offline</li>
+        <li>Pending suggestions, reports, claims, and edits</li>
+        <li>The optional contributor id, until you sign out</li>
+      </ul>
+      <p>
+        A backup file is created only when you tap Export backup, and it is shared only if you send
+        it yourself. Import replaces data on that phone only after you confirm.
+      </p>
+      <h2>What we do not collect</h2>
+      <p>
+        We do not collect your name, email, phone number, contacts, photos, health details,
+        messages, or payment information. Searching for a clinic does not send your medical history.
+        There is no analytics SDK and no ads SDK.
+      </p>
+      <p>
+        We do not sell personal information. We do not share it for advertising or for a data
+        broker.
+      </p>
+      <h2>Children</h2>
+      <p>
+        Sourceify is not directed at children under 13. The store listing is for adults 18 and
+        older. Do not include a child’s name or story in a note.
+      </p>
+      <h2>Delete</h2>
+      <p>
+        There is no Sourceify server account to erase. Sign out deletes the local id. Uninstalling,
+        or clearing the app’s storage, deletes saved places, settings, and pending notes. We cannot
+        delete a search a third-party host already logged, because we do not operate those hosts and
+        we do not keep a copy. Write to us if you need help.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Isaac<br />
+        <a href="mailto:isaacdschuster@gmail.com">isaacdschuster@gmail.com</a>
+      </p>
+    </main>
+    <footer class="wrap">
+      <p>
+        <a href="../">Home</a>
+        ·
+        <a href="../support/">Support</a>
+        ·
+        <a href="../delete-account/">Delete account</a>
+      </p>
+    </footer>
+  </body>
+</html>
