@@ -26,7 +26,7 @@
 
   <link rel="canonical" href="https://stellartimelock.com/" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/style.css?v=2" />
   <script>document.documentElement.classList.add("nav-js");</script>
 
   <script type="application/ld+json">
@@ -299,25 +299,39 @@
     <div class="security-inner">
       <div class="security-header">
         <span class="security-eyebrow">SECURITY</span>
-        <h2 class="section-title security-title">Security you can inspect</h2>
+        <h2 class="section-title security-title">Security: what you can check</h2>
         <p class="security-copy">
-          Stellar TimeLock is a non-custodial wallet. Security modules and excerpts,
-          legal docs, and on-chain contract IDs are published for review in our
-          WALLET repository. Full app backend and complete vault contract source
-          remain proprietary.
+          <strong>Stellar TimeLock has not been independently audited.</strong>
+          No outside security firm has reviewed the app or the vault contracts, and
+          there is no audit report or certificate. The &ldquo;Audit Our Security Code&rdquo;
+          screen in the app shows code excerpts we publish ourselves. It is not a
+          third-party audit.
         </p>
       </div>
+      <h3 class="security-subtitle">Public and verifiable</h3>
       <ul class="security-list">
-        <li>Private keys never leave the device</li>
-        <li>No custody. No admin. No backdoor. Your keys, your device.</li>
-        <li>Android Keystore / SecureStore device protection; optional biometric unlock where supported</li>
-        <li>Time-Lock Vaults enforced by Soroban — no admin key, no emergency exit</li>
-        <li>Optional biometric unlock with session caching when enabled</li>
-        <li>Best-effort memory zeroing after cryptographic operations</li>
-        <li><code>allowBackup="false"</code> on Android — no accidental cloud copies of secrets</li>
+        <li>Mainnet vault contracts, live on Stellar:
+          XLM Vault <a href="https://stellar.expert/explorer/public/contract/CCWDMIPD4ZTTIV5LR53PD325MS6VRGF3WJEJRKNCIKK3G7H6AXJ3UE4F" target="_blank" rel="noopener noreferrer"><code>CCWDMIPD4ZTTIV5LR53PD325MS6VRGF3WJEJRKNCIKK3G7H6AXJ3UE4F</code></a>,
+          Advanced Vaults (Cooling-Off, Vesting, Dead Man's Switch) <a href="https://stellar.expert/explorer/public/contract/CAPXQVGAD2TZNEDKZZDX3YKUBHQ2UI2XDI5AND6Z35D2YY2NZ7AJV6LM" target="_blank" rel="noopener noreferrer"><code>CAPXQVGAD2TZNEDKZZDX3YKUBHQ2UI2XDI5AND6Z35D2YY2NZ7AJV6LM</code></a>,
+          and Multi-Asset Vault <a href="https://stellar.expert/explorer/public/contract/CBKOYL6BHVCHB4DJFVNHLGJKLCIFVRRRDVN2NRWX6TKRHQJQZQHPCACV" target="_blank" rel="noopener noreferrer"><code>CBKOYL6BHVCHB4DJFVNHLGJKLCIFVRRRDVN2NRWX6TKRHQJQZQHPCACV</code></a>.</li>
+        <li>The code hash (WASM) of each deployed contract, recorded on-chain:
+          XLM Vault <code>eb2e8262657c60520b23c1a02e329257a8cca512329efa30c9c72db6fd799680</code>,
+          Advanced Vaults <code>651c5f70fed3d115833e450b8fcfae65263353d203b6a04e67f5e053bfb788aa</code>,
+          Multi-Asset Vault <code>c5ad8d9c07b6e153939c1f53612b10afe34b27181cc00e7b259a6a44ea4d4399</code>.</li>
+        <li>All three were deployed by the Stellar account <code>GBP4L2GO6OELSA6DBGMFVAWI5Z57CRYBEVWNTABOZ2CTCT23T2ALS37Y</code>.</li>
+        <li>Every vault deposit and withdrawal is a public Stellar transaction that anyone can look up.</li>
+        <li>The <a href="https://github.com/stellartimelock/WALLET" target="_blank" rel="noopener noreferrer">WALLET repository</a> on GitHub: security policy, contract addresses, legal docs, and the source of the in-app security-code screen.</li>
       </ul>
+      <h3 class="security-subtitle">Not public</h3>
+      <ul class="security-list security-list-private">
+        <li>The full source code of the Android app.</li>
+        <li>The source code of the vault contracts. Because it isn't published, Stellar Expert lists the deployed contracts as unverified, and no one outside StellarTimeLock can match the deployed code to its source.</li>
+      </ul>
+      <p class="security-copy">
+        Found a vulnerability? Email <a href="mailto:StellarTimeLock@gmail.com">StellarTimeLock@gmail.com</a>.
+      </p>
       <a class="cta cta-primary security-cta" href="https://github.com/stellartimelock/WALLET" target="_blank" rel="noopener noreferrer">
-        View security reference →
+        View the WALLET repository →
       </a>
     </div>
   </section>

@@ -420,6 +420,20 @@ a:hover { color: #4ecdc4; }
 .security-cta {
   margin-top: 8px;
 }
+.security-subtitle {
+  max-width: 560px;
+  margin: 0 auto 8px;
+  text-align: left;
+  font-size: 16px;
+  color: var(--text);
+}
+.security-list a { color: var(--teal); }
+.security-list code { word-break: break-all; }
+.security-list-private li:before {
+  content: "\2715";
+  color: var(--text-secondary);
+}
+.security-inner > .security-copy { margin-bottom: 24px; }
 
 /* ---------------- Footer ---------------- */
 
