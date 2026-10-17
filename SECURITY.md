@@ -32,9 +32,11 @@ Wallet data on device is protected with **AES-256-CBC** authenticated by **HMAC-
 
 All wallet data — including seed phrases, private keys, contacts, vault configurations, and local transaction history — remains on the device under your control.
 
-## Audit Information
+## Audit Status and Code Excerpts
 
-Source code excerpts for security review are available **in the app** under:
+Stellar TimeLock has **not been independently audited**. No outside security firm has reviewed the app or the vault contracts, and there is no audit report or certificate.
+
+Source code excerpts that we publish ourselves are available **in the app** under the screen below. Despite its name, it is not a third-party audit:
 
 **Settings → Audit Our Security Code**
 

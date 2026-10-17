@@ -7,7 +7,7 @@
     "com.stellartimelock": true,              // StellarTimeLock wallet
     "com.stellartimelock.music": false,       // Music
     "com.stellartimelock.video": false,       // Video
-    "app.stellar.write": false,               // Write
+    "com.stellartimelock.write": false,       // Write
     "app.stellar.sourceify": false,           // Sourceify
     "com.stellartimelock.stellarvault": false // Fortress
   };

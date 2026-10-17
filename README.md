@@ -57,7 +57,7 @@ There is:
 
 All wallet data stays on-device. Encryption uses AES-256-CBC with HMAC-SHA256 (seed-derived / device-protected key material via Android Keystore / SecureStore). Optional biometric unlock is available where supported. Private keys and seed phrases never leave the device.
 
-Source code excerpts for independent review are available in the app under **Settings → Audit Our Security Code**, and related modules/docs are referenced in this repository. Full app backend and complete vault contract source are not published here.
+Stellar TimeLock has **not been independently audited**. No outside security firm has reviewed the app or the vault contracts, and there is no audit report or certificate. The in-app screen **Settings → Audit Our Security Code** shows source code excerpts that we publish ourselves; it is not a third-party audit. Related modules/docs are referenced in this repository. Full app backend and complete vault contract source are not published here.
 
 See [SECURITY.md](./SECURITY.md) for vulnerability reporting and the security model.
 
