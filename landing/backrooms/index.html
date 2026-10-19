@@ -228,4 +228,4 @@ function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.
 document.getElementById('go').onclick=()=>{if(!save.tip){save.tip=1;persist();setTimeout(()=>{const T=document.getElementById('toast');T.textContent='🪙 Collect tokens to rank up and unlock flashlight colors';T.style.opacity=1;toastT=6},800)}document.getElementById('start').style.display='none';paused=false;try{hum()}catch(e){}if(!touch)R.domElement.requestPointerLock()};
 document.getElementById('reset').onclick=()=>{save={level:0,best:0,steps:0,points:0,orbs:{},themes:{},sign:0,light:0};persist()};
 buildLandmarks();stream();loop();
-</script></body></html>
+</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" crossorigin="anonymous" data-cf-beacon='{"token":"6adff42a8edf4c448d2fe3847d949074"}'></script></body></html>
