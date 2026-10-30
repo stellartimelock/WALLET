@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fdroid>
+	<repo icon="icon.png" name="Stellar TimeLock" pubkey="3082053a30820322a003020102020900b2a9ee134a67dfbf300d06092a864886f70d01010c0500304a310b300906035504061302555331193017060355040a13105374656c6c61722054696d656c6f636b3120301e060355040313175374656c6c61722054696d654c6f636b2057616c6c65743020170d3236313032393035303532335a180f32313038313231383035303532335a304a310b300906035504061302555331193017060355040a13105374656c6c61722054696d656c6f636b3120301e060355040313175374656c6c61722054696d654c6f636b2057616c6c657430820222300d06092a864886f70d01010105000382020f003082020a0282020100a20a086fedeb21c6b089f784bf7c3275e7daae65421be23508bca5794b31c337fcf333e10ef1e776aa39090ad06d69296c211aa32893bbaa078d8f33c8a9befef2338a3ce502842273558b0cd15f7b07ffe389ea1b60140f3416528b21bc5d2a01803bbfb3c4a4d1d40ae82d807aa0be35401066666aa7da7ba7111601a168634508ed20141bb00d8c82adb4335533877a8e41ee49137345c932078fe0c6070de63049376f14fd2d999f141b459a0bb6faeaceff3b8596c769c809121c866e1807556d01126454e3c8433e969e95415291bf6c41695edcfeb3a6e775ed0b3b39a2f06c037fea7304c5e5651f1f737de445648b386077d59f34dbd8c48bf4e7abf2ed8c4c3d1a98eef1d5091d1b43bd1ad351cb01e63c1748e37e5c069ea76e5ee85bd7d9c1161d561b43740c21230a66e61ba8b1577e57bfb9106edd394722c2b1c5a0e1a13b2090cbf1b3a152f487063d4e7103edcc72cf4a277f377e088f98f7f44b71b5517708b8bd6137ee3fbe56c3b0d62bfd9143bd6c3fc11218c95f3d33df84161c5c83e09b77c4aca749715d56d5b1a8590dfed8daedde492b4ceb711698bbb7128ce54bdff039f02cdf23ec838046b44405c47824acbd5f7ee6dcb5b93313daca95cc58adead8f28b0de50029e734feb8fdc20d59bdfb59788b94cac31afe961b1e551c5a488cd6893e972a9943f306d564f53d8864d48846a8f0ad0203010001a321301f301d0603551d0e041604148e8b8ea14c06f70ad8f15ac14487035d90b5d2a6300d06092a864886f70d01010c050003820201004ec26d8abd481c0dcdb5a9078280d4957634a47e252fe87602179fefdd17b60ba7ede8fb6f57ab4fb413b7b9d97a680d444975f4b4425b21ee3efcb92c93d2d83a43e50f7e1ec85936e99078a50c4b009c616d5574716a43b8bfaad0fda7af6fd28f94d2dc325c1131a67ea4bc1b5ca9c577f24f239afa167eb5eb8fbe6c0fc334aa9842886771506c8441d705820437ebddacaf32e09a33752cbfdac6236792bc2af485acec5cdd1081078123af8cff0f1e0cbba5fcd65f69a9c41f2edb763c77a598c03514092be9255bc47ad76a657226a8d0f03e328824ba3daffdeee649792f2be9142b59193e3295924073ba1726661efe53e3b46eecd6d99bac74b2daf80afc9fccbf25422f51dc4d86a4a0b33e0a58e434ba3bc325d51dfe02ad55265bc8451b3364ec28ea8285a70bf61684f092ac726dc9ed92e182aeb165f106dc55e502f4d51056ccc608b060cac3fa672709871529816c5d82ccbd28b1bcda79e90b205cf402a1d707c336f29a3c83f257f2ba13c54dd7b5fe21f22e16e4b53420c3c28c7da3feeb85f74c4f684bc41278eef3afd49c5a63bc6eb6e29efa9bb2702c11134e15514ed10ed545ca9bae618e16f562df46dfd3b4bfa959c734e364fe77f63a143e9f01680ba66ea8259ce40887de9946881790a135fd3cd082bca7aca7405944f5d812f87db9d40e3cf2b1b38911632bfd093452ac1d3e174ef7db" timestamp="1793327454" url="https://stellartimelock.com/fdroid/repo" version="20002">
+		<description>The official F-Droid repository of the Stellar TimeLock wallet, signed with the project's own key. Source available at https://github.com/stellartimelock/stellartimelock-wallet</description>
+	</repo>
+	<application id="com.stellartimelock">
+		<id>com.stellartimelock</id>
+		<added>2026-10-30</added>
+		<lastupdated>2026-10-30</lastupdated>
+		<name>Stellar TimeLock</name>
+		<summary>Non-custodial Stellar wallet with time-locked vaults</summary>
+		<desc>Stellar TimeLock is a non-custodial Stellar (XLM) wallet. Your keys stay on your device.
+
+* Time-lock vaults: lock XLM or Stellar tokens until a date you choose, enforced by Soroban smart contracts
+* Cooling-off and vesting vaults
+* Send, receive and swap, signed on the device
+* Multiple wallets and an address book
+* Optional biometric unlock
+
+This is the fdroid build: no Firebase/FCM, Google Play services, ML Kit or Play install referrer. QR scanning uses ZXing.
+
+Source available under GPL-3.0-or-later. This repository is run by the Stellar TimeLock project, and the app is signed with the same key as our direct-download builds.</desc>
+		<license>GPL-3.0-or-later</license>
+		<categories>Money</categories>
+		<category>Money</category>
+		<web>https://stellartimelock.com</web>
+		<source>https://github.com/stellartimelock/stellartimelock-wallet</source>
+		<tracker>https://github.com/stellartimelock/stellartimelock-wallet/issues</tracker>
+		<changelog>https://github.com/stellartimelock/stellartimelock-wallet/blob/HEAD/CHANGELOG.md</changelog>
+		<author>Stellar TimeLock</author>
+		<email>stellartimelock@gmail.com</email>
+		<marketversion></marketversion>
+		<marketvercode>30</marketvercode>
+		<antifeatures>NonFreeNet</antifeatures>
+		<package>
+			<version>1.6.19</version>
+			<versioncode>30</versioncode>
+			<apkname>com.stellartimelock_30.apk</apkname>
+			<hash type="sha256">6cc0486996a8c76e9e4e16c339659b098ac02a6c6da6e7f158b596c8a008a56c</hash>
+			<size>31280280</size>
+			<sdkver>24</sdkver>
+			<targetSdkVersion>36</targetSdkVersion>
+			<added>2026-10-30</added>
+			<sig>7d58f8c578bc69dca9d501e473f705c3</sig>
+			<permissions>ACCESS_NETWORK_STATE,CAMERA,INTERNET,NFC,POST_NOTIFICATIONS,READ_EXTERNAL_STORAGE,RECEIVE_BOOT_COMPLETED,USE_BIOMETRIC,USE_FINGERPRINT,VIBRATE,WRITE_EXTERNAL_STORAGE,com.stellartimelock.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION,com.stellartimelock.timelock.permission.TAP_PAY,com.stellartimelock.wallet.permission.PICK_KEY</permissions>
+			<uses-permission maxSdkVersion="32" name="android.permission.READ_EXTERNAL_STORAGE"/>
+			<uses-permission maxSdkVersion="32" name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+			<nativecode>arm64-v8a</nativecode>
+		</package>
+	</application>
+</fdroid>

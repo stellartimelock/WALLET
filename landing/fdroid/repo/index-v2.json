@@ -1,0 +1,149 @@
+{
+  "repo": {
+    "name": {
+      "en-US": "Stellar TimeLock"
+    },
+    "description": {
+      "en-US": "The official F-Droid repository of the Stellar TimeLock wallet, signed with the project's own key. Source available at https://github.com/stellartimelock/stellartimelock-wallet"
+    },
+    "icon": {
+      "en-US": {
+        "name": "/icons/icon.png",
+        "sha256": "9f6689bcfaea5da0d55c1ce9b1b40dab297ec3cf41de91908e7c33462a29f2a4",
+        "size": 471932
+      }
+    },
+    "address": "https://stellartimelock.com/fdroid/repo",
+    "timestamp": 1793327454000,
+    "categories": {
+      "Money": {
+        "name": {
+          "en-US": "Money"
+        }
+      }
+    }
+  },
+  "packages": {
+    "com.stellartimelock": {
+      "metadata": {
+        "added": 1793327453000,
+        "categories": [
+          "Money"
+        ],
+        "changelog": "https://github.com/stellartimelock/stellartimelock-wallet/blob/HEAD/CHANGELOG.md",
+        "issueTracker": "https://github.com/stellartimelock/stellartimelock-wallet/issues",
+        "lastUpdated": 1793327453000,
+        "license": "GPL-3.0-or-later",
+        "sourceCode": "https://github.com/stellartimelock/stellartimelock-wallet",
+        "webSite": "https://stellartimelock.com",
+        "screenshots": {
+          "phone": {
+            "en-US": [
+              {
+                "name": "/com.stellartimelock/en-US/phoneScreenshots/1.png",
+                "sha256": "449be516c00759ed9d11f5c55d9827e8fa228f440d1aa58eedffce87e96a18d5",
+                "size": 213524
+              }
+            ]
+          }
+        },
+        "authorEmail": "stellartimelock@gmail.com",
+        "authorName": "Stellar TimeLock",
+        "name": {
+          "en-US": "Stellar TimeLock"
+        },
+        "summary": {
+          "en-US": "Non-custodial Stellar wallet with time-locked vaults"
+        },
+        "description": {
+          "en-US": "Stellar TimeLock is a non-custodial Stellar (XLM) wallet. Your keys stay on your device.\n\n* Time-lock vaults: lock XLM or Stellar tokens until a date you choose, enforced by Soroban smart contracts\n* Cooling-off and vesting vaults\n* Send, receive and swap, signed on the device\n* Multiple wallets and an address book\n* Optional biometric unlock\n\nThis is the fdroid build: no Firebase/FCM, Google Play services, ML Kit or Play install referrer. QR scanning uses ZXing.\n\nSource available under GPL-3.0-or-later. This repository is run by the Stellar TimeLock project, and the app is signed with the same key as our direct-download builds."
+        },
+        "icon": {
+          "en-US": {
+            "name": "/com.stellartimelock/en-US/icon_JrMl87TKaAkCZkAkTF_mUdNU935pEf_A36_Acmv-tt4=.png",
+            "sha256": "26b325f3b4ca6809026640244c5fe651d354f77e6911ffc0dfafc0726bfeb6de",
+            "size": 461672
+          }
+        },
+        "preferredSigner": "b93f0f85e1aa147b646a36f415f87ef49bf14e9fa9fabee0f1ba4c48b7b8b1de"
+      },
+      "versions": {
+        "6cc0486996a8c76e9e4e16c339659b098ac02a6c6da6e7f158b596c8a008a56c": {
+          "added": 1793327453000,
+          "file": {
+            "name": "/com.stellartimelock_30.apk",
+            "sha256": "6cc0486996a8c76e9e4e16c339659b098ac02a6c6da6e7f158b596c8a008a56c",
+            "size": 31280280
+          },
+          "manifest": {
+            "nativecode": [
+              "arm64-v8a"
+            ],
+            "versionName": "1.6.19",
+            "versionCode": 30,
+            "usesSdk": {
+              "minSdkVersion": 24,
+              "targetSdkVersion": 36
+            },
+            "signer": {
+              "sha256": [
+                "b93f0f85e1aa147b646a36f415f87ef49bf14e9fa9fabee0f1ba4c48b7b8b1de"
+              ]
+            },
+            "usesPermission": [
+              {
+                "name": "android.permission.INTERNET"
+              },
+              {
+                "name": "android.permission.READ_EXTERNAL_STORAGE",
+                "maxSdkVersion": 32
+              },
+              {
+                "name": "android.permission.USE_BIOMETRIC"
+              },
+              {
+                "name": "android.permission.USE_FINGERPRINT"
+              },
+              {
+                "name": "android.permission.NFC"
+              },
+              {
+                "name": "android.permission.VIBRATE"
+              },
+              {
+                "name": "android.permission.WRITE_EXTERNAL_STORAGE",
+                "maxSdkVersion": 32
+              },
+              {
+                "name": "com.stellartimelock.wallet.permission.PICK_KEY"
+              },
+              {
+                "name": "com.stellartimelock.timelock.permission.TAP_PAY"
+              },
+              {
+                "name": "android.permission.ACCESS_NETWORK_STATE"
+              },
+              {
+                "name": "android.permission.CAMERA"
+              },
+              {
+                "name": "android.permission.RECEIVE_BOOT_COMPLETED"
+              },
+              {
+                "name": "android.permission.POST_NOTIFICATIONS"
+              },
+              {
+                "name": "com.stellartimelock.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+              }
+            ]
+          },
+          "antiFeatures": {
+            "NonFreeNet": {
+              "en-US": "Swaps use SimpleSwap through the project's swap proxy."
+            }
+          }
+        }
+      }
+    }
+  }
+}
