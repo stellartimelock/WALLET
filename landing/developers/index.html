@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Developer Guide — Stellar TimeLock</title>
+  <meta name="description" content="Copy-paste @stellar/stellar-sdk examples: payments with memos, Stellar TimeLock vault contracts (time lock, cooling-off, vesting) on testnet, and SEP-7 pay links." />
+  <link rel="canonical" href="https://stellartimelock.com/developers/" />
+  <meta name="theme-color" content="#05070d" />
+  <link rel="icon" type="image/png" href="../assets/logo.png" />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <script>document.documentElement.classList.add("nav-js");</script>
+  <style>
+    .legal pre { background:#0b1020; border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:13px; line-height:1.5; margin:12px 0 20px; }
+    .legal pre code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space:pre; }
+    .legal .toc a { margin-right:14px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="nav-brand-bar">
+    <a class="brand" href="../" aria-label="Stellar TimeLock home">
+      <img src="../assets/logo.png" alt="" class="brand-logo" />
+      <span class="brand-name">Stellar TimeLock</span>
+    </a>
+    <button
+      type="button"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="primary-nav"
+      aria-label="Open menu"
+    >
+      <span class="nav-toggle-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="nav-links-bar" id="primary-nav">
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../#features">Features</a>
+      <a href="../#security">Security</a>
+      <a href="../#faq">FAQ</a>
+      <a href="https://files.stellartimelock.com">FILES+</a>
+      <a href="https://flipsend.stellartimelock.com">FlipSend</a>
+      <a href="../music/">Music</a>
+      <a href="../video/">Video</a>
+      <a href="../write/">Write</a>
+      <a href="./" aria-current="page">Developers</a>
+      <a
+        href="https://github.com/stellartimelock/WALLET"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-link-github"
+      >
+        <svg
+          class="nav-link-github-icon"
+          viewBox="0 0 24 24"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            fill="currentColor"
+            d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.06-.72.08-.7.08-.7 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.72 1.27 3.38.97.11-.75.41-1.27.75-1.56-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"
+          />
+        </svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="legal">
+  <h1>Developer Guide</h1>
+  <p class="legal-lede">
+    Copy-paste examples for building on Stellar with <code>@stellar/stellar-sdk</code> 17.x, including the
+    same vault contracts the Stellar TimeLock wallet uses. Every sample below was run against Stellar testnet.
+  </p>
+  <p class="toc">
+    <a href="#setup">Setup</a><a href="#payment">Payment with memo</a><a href="#timelock">Time-lock vault</a><a href="#cooling">Cooling-off &amp; vesting</a><a href="#sep7">SEP-7 pay links</a>
+  </p>
+  <p>
+    The wallet is source available at
+    <a href="https://github.com/stellartimelock/stellartimelock-wallet" target="_blank" rel="noopener noreferrer">github.com/stellartimelock/stellartimelock-wallet</a>.
+    These examples use throwaway testnet accounts funded by Friendbot. Never paste a real secret key into sample code.
+  </p>
+
+  <h2 id="setup">Setup</h2>
+  <pre><code>npm install @stellar/stellar-sdk@17</code></pre>
+  <p>Save this as <code>common.mjs</code>. The other samples import from it.</p>
+  <pre><code>import { Keypair, Networks, contract } from &quot;@stellar/stellar-sdk&quot;;
+export const RPC_URL = &quot;https://soroban-testnet.stellar.org&quot;;
+export const NETWORK = Networks.TESTNET;
+export async function fundedKeypair() {
+  const kp = Keypair.random();
+  const r = await fetch(`https://friendbot.stellar.org?addr=${kp.publicKey()}`);
+  if (!r.ok) throw new Error(&quot;friendbot failed: &quot; + r.status);
+  return kp;
+}
+export async function vaultClient(contractId, kp) {
+  const { signTransaction } = contract.basicNodeSigner(kp, NETWORK);
+  return contract.Client.from({ contractId, rpcUrl: RPC_URL, networkPassphrase: NETWORK, publicKey: kp.publicKey(), signTransaction });
+}
+export const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));</code></pre>
+
+  <h2 id="payment">Send XLM with a memo</h2>
+  <p>
+    Exchanges and many services need a memo to credit you. <code>Memo.text</code> holds at most 28 bytes
+    (bytes, not characters, so emoji count extra); the SDK throws if you go over.
+  </p>
+  <pre><code>import { Horizon, TransactionBuilder, Operation, Asset, Memo, BASE_FEE } from &quot;@stellar/stellar-sdk&quot;;
+import { fundedKeypair, NETWORK } from &quot;./common.mjs&quot;;
+const horizon = new Horizon.Server(&quot;https://horizon-testnet.stellar.org&quot;);
+const sender = await fundedKeypair();
+const receiver = await fundedKeypair();
+const memoText = &quot;invoice 1042&quot;;
+if (new TextEncoder().encode(memoText).length &gt; 28) throw new Error(&quot;memo over 28 bytes&quot;);
+const account = await horizon.loadAccount(sender.publicKey());
+const tx = new TransactionBuilder(account, { fee: BASE_FEE, networkPassphrase: NETWORK })
+  .addOperation(Operation.payment({ destination: receiver.publicKey(), asset: Asset.native(), amount: &quot;12.5&quot; }))
+  .addMemo(Memo.text(memoText))
+  .setTimeout(60)
+  .build();
+tx.sign(sender);
+const res = await horizon.submitTransaction(tx);
+console.log(&quot;paid, hash&quot;, res.hash);
+const t = await horizon.transactions().transaction(res.hash).call();
+console.log(&quot;memo on ledger:&quot;, t.memo_type, t.memo);
+try { Memo.text(&quot;x&quot;.repeat(29)); console.log(&quot;NO THROW on 29 bytes&quot;); } catch (e) { console.log(&quot;29-byte memo rejected:&quot;, e.message); }</code></pre>
+
+  <h2 id="timelock">Time-lock vault (xlm_vault)</h2>
+  <p>
+    Testnet contract <code>CBIXRLC5GQ6O5UUJFVRIWZD77P5LUVJG3XGGUVS4EWHAJ6LXQZNKH35Z</code> locks XLM until a
+    Unix timestamp. Functions: <code>create_vault</code>, <code>deposit</code>, <code>extend_lock</code>,
+    <code>withdraw</code>, <code>get_vault</code>, <code>list_owned</code>. The lock can only move later, never earlier,
+    and <code>withdraw</code> fails until the unlock time passes. Amounts are in stroops (1 XLM = 10,000,000).
+    Calls that return <code>Result</code> are unwrapped with <code>.result.unwrap()</code>.
+  </p>
+  <pre><code>import { fundedKeypair, vaultClient, sleep } from &quot;./common.mjs&quot;;
+const VAULT = &quot;CBIXRLC5GQ6O5UUJFVRIWZD77P5LUVJG3XGGUVS4EWHAJ6LXQZNKH35Z&quot;;
+const owner = await fundedKeypair();
+const vault = await vaultClient(VAULT, owner);
+const XLM = 10_000_000n; // 1 XLM = 10,000,000 stroops
+const now = BigInt(Math.floor(Date.now() / 1000));
+let tx = await vault.create_vault({ owner: owner.publicKey(), name: &quot;Rainy day&quot;, initial_deposit: 5n * XLM, unlock_timestamp: now + 20n });
+const vaultId = (await tx.signAndSend()).result.unwrap(); // contract returns Result&lt;u64&gt;
+console.log(&quot;vault id&quot;, vaultId);
+await (await vault.deposit({ caller: owner.publicKey(), vault_id: vaultId, amount: 2n * XLM })).signAndSend();
+await (await vault.extend_lock({ caller: owner.publicKey(), vault_id: vaultId, additional_seconds: 10n })).signAndSend();
+const v = (await vault.get_vault({ vault_id: vaultId })).result.unwrap();
+console.log(&quot;balance&quot;, v.balance, &quot;unlocks&quot;, new Date(Number(v.unlock_timestamp) * 1000).toISOString());
+const { result: ids } = await vault.list_owned({ owner: owner.publicKey() });
+console.log(&quot;owned&quot;, ids);
+try { await (await vault.withdraw({ caller: owner.publicKey(), vault_id: vaultId })).signAndSend(); console.log(&quot;EARLY WITHDRAW WORKED?!&quot;); }
+catch (e) { console.log(&quot;early withdraw refused:&quot;, String(e.message).slice(0, 120)); }
+while (BigInt(Math.floor(Date.now() / 1000)) &lt; v.unlock_timestamp + 6n) await sleep(2000);
+await (await vault.withdraw({ caller: owner.publicKey(), vault_id: vaultId })).signAndSend();
+const after = (await vault.get_vault({ vault_id: vaultId })).result.unwrap();
+console.log(&quot;withdrawn&quot;, after.withdrawn, &quot;balance&quot;, after.balance);</code></pre>
+
+  <h2 id="cooling">Cooling-off and vesting (multi_asset_vault_v2)</h2>
+  <p>
+    Testnet contract <code>CAHAQAN6KYAQCJ34W6CVZJGMWRXKCZFHM32F37E4EFEIIC4636TD74BV</code> holds any token; for XLM pass the
+    native token contract <code>CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC</code>.
+    A cooling-off vault makes every withdrawal wait: call <code>initiate_withdrawal</code>, wait
+    <code>cooling_off_duration_seconds</code>, then <code>withdraw</code> (the owner can <code>cancel_withdrawal</code> in between).
+    A vesting vault releases funds linearly between two timestamps; read <code>get_unlocked_amount</code> and claim with
+    <code>withdraw_vested</code>.
+  </p>
+  <pre><code>import { fundedKeypair, vaultClient, sleep } from &quot;./common.mjs&quot;;
+const V2 = &quot;CAHAQAN6KYAQCJ34W6CVZJGMWRXKCZFHM32F37E4EFEIIC4636TD74BV&quot;;
+const XLM_TOKEN = &quot;CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC&quot;; // native XLM (testnet SAC)
+const XLM = 10_000_000n;
+const owner = await fundedKeypair();
+const v2 = await vaultClient(V2, owner);
+const me = owner.publicKey();
+const now = () =&gt; BigInt(Math.floor(Date.now() / 1000));
+
+// Cooling-off: every withdrawal must be announced, then wait.
+let tx = await v2.create_cooling_off_vault({ owner: me, token: XLM_TOKEN, name: &quot;Think twice&quot;, initial_deposit: 3n * XLM, cooling_off_duration_seconds: 15n });
+const coolId = (await tx.signAndSend()).result.unwrap();
+await (await v2.initiate_withdrawal({ caller: me, vault_id: coolId })).signAndSend();
+let cv = (await v2.get_vault({ vault_id: coolId })).result.unwrap();
+console.log(&quot;cooling id&quot;, coolId, &quot;kind&quot;, cv.kind.tag, &quot;initiated&quot;, cv.withdrawal_initiated_timestamp);
+while (now() &lt; cv.withdrawal_initiated_timestamp + cv.cooling_off_duration_seconds + 6n) await sleep(2000);
+await (await v2.withdraw({ caller: me, vault_id: coolId })).signAndSend();
+console.log(&quot;cooling-off withdrawn&quot;, (await v2.get_vault({ vault_id: coolId })).result.unwrap().withdrawn);
+
+// Vesting: unlocks linearly between start and end.
+const start = now();
+tx = await v2.create_vesting_vault({ owner: me, token: XLM_TOKEN, name: &quot;Payroll&quot;, initial_deposit: 6n * XLM, vesting_start_timestamp: start, vesting_end_timestamp: start + 60n });
+const vestId = (await tx.signAndSend()).result.unwrap();
+await sleep(20000);
+const claimable = (await v2.get_unlocked_amount({ vault_id: vestId })).result.unwrap();
+console.log(&quot;vesting id&quot;, vestId, &quot;claimable&quot;, claimable);
+await (await v2.withdraw_vested({ caller: me, vault_id: vestId, amount: claimable })).signAndSend();
+const vv = (await v2.get_vault({ vault_id: vestId })).result.unwrap();
+console.log(&quot;withdrawn_so_far&quot;, vv.withdrawn_so_far, &quot;of&quot;, vv.total_locked_amount);</code></pre>
+
+  <h2 id="sep7">SEP-7 <code>web+stellar:pay</code> links</h2>
+  <p>
+    A <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0007.md" target="_blank" rel="noopener noreferrer">SEP-7</a>
+    link asks a wallet to prepare a payment the user then reviews and signs. Omit <code>network_passphrase</code> for mainnet.
+  </p>
+  <pre><code>import { Networks, StrKey } from &quot;@stellar/stellar-sdk&quot;;
+function payLink({ destination, amount, memo, msg, network = Networks.TESTNET }) {
+  if (!StrKey.isValidEd25519PublicKey(destination)) throw new Error(&quot;bad destination&quot;);
+  const q = [[&quot;destination&quot;, destination], [&quot;amount&quot;, amount]];
+  if (memo) q.push([&quot;memo&quot;, memo], [&quot;memo_type&quot;, &quot;MEMO_TEXT&quot;]);
+  if (msg) q.push([&quot;msg&quot;, msg]);
+  q.push([&quot;network_passphrase&quot;, network]);
+  return &quot;web+stellar:pay?&quot; + q.map(([k, v]) =&gt; `${k}=${encodeURIComponent(v)}`).join(&quot;&amp;&quot;);
+}
+function parsePayLink(uri) {
+  const m = /^web\+stellar:pay\?(.*)$/i.exec(uri.trim());
+  if (!m) throw new Error(&quot;not a web+stellar:pay link&quot;);
+  const p = new URLSearchParams(m[1]);
+  return { destination: p.get(&quot;destination&quot;), amount: p.get(&quot;amount&quot;), memo: p.get(&quot;memo&quot;), memoType: p.get(&quot;memo_type&quot;) ?? &quot;MEMO_TEXT&quot;, msg: p.get(&quot;msg&quot;), network: p.get(&quot;network_passphrase&quot;) ?? Networks.PUBLIC };
+}
+const link = payLink({ destination: &quot;GAEPPLTQ4OIBG4J6DSI33FDYBB7YCKWOT36DNVLNOV65PIVSBAVSGXLS&quot;, amount: &quot;12.5&quot;, memo: &quot;invoice 1042&quot;, msg: &quot;Coffee &amp; cake&quot; });
+console.log(link);
+console.log(parsePayLink(link));</code></pre>
+
+  <p class="legal-meta"><em>Last updated: October 29, 2026. Testnet contract IDs can change when testnet resets.</em></p>
+  <p><a href="../">← Back to home</a></p>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-follow">
+      <p class="follow-label" id="footer-follow-label">Follow us</p>
+      <nav class="social-row" aria-labelledby="footer-follow-label">
+        <a class="social-link" href="https://x.com/StellarTimeLock" target="_blank" rel="noopener noreferrer" aria-label="Stellar TimeLock on X" title="X">
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.instagram.com/StellarTimeLock/" target="_blank" rel="noopener noreferrer" aria-label="Stellar TimeLock on Instagram" title="Instagram">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg>
+        </a>
+        <a class="social-link" href="https://www.tiktok.com/@StellarTimeLock" target="_blank" rel="noopener noreferrer" aria-label="Stellar TimeLock on TikTok" title="TikTok">
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.youtube.com/@StellarTimeLock" target="_blank" rel="noopener noreferrer" aria-label="Stellar TimeLock on YouTube" title="YouTube">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.reddit.com/user/StellarTimeLock" target="_blank" rel="noopener noreferrer" aria-label="Stellar TimeLock on Reddit" title="Reddit">
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.facebook.com/Stellartimelockofficial" target="_blank" rel="noopener noreferrer" aria-label="Stellar TimeLock on Facebook" title="Facebook">
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+        </a>
+      </nav>
+    </div>
+
+    <p class="footer-copyright">&copy; 2026 StellarTimeLock, LLC.</p>
+  </div>
+</footer>
+<script src="../assets/nav.js" defer></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" crossorigin="anonymous" data-cf-beacon='{"token":"6adff42a8edf4c448d2fe3847d949074"}'></script></body>
+</html>
