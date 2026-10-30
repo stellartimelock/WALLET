@@ -257,7 +257,7 @@
     Every sample below was run against Stellar testnet.
   </p>
   <p class="toc">
-    <a href="#setup">Setup</a><a href="#payment">Payment with memo</a><a href="#timelock">Time-lock vault</a><a href="#cooling">Cooling-off &amp; vesting</a><a href="#timebounds">Time bounds vs. time locks</a><a href="#sep7">SEP-7 pay links</a><a href="#faq">FAQ</a>
+    <a href="#setup">Setup</a><a href="#payment">Payment with memo</a><a href="#timelock">Time-lock vault</a><a href="#cooling">Cooling-off &amp; vesting</a><a href="#timebounds">Time bounds vs. time locks</a><a href="#verify-recovery">Verify recovery</a><a href="#sep7">SEP-7 pay links</a><a href="#faq">FAQ</a>
   </p>
   <p>
     The wallet is source available at
@@ -448,6 +448,83 @@ console.log(&quot;claimed after unlock:&quot;, (await claim()).successful);</cod
     on developers.stellar.org, and see the
     <a href="https://developers.stellar.org/docs/build/guides/transactions/claimable-balances" target="_blank" rel="noopener noreferrer">claimable balances guide</a>
     for every predicate type.
+  </p>
+
+  <h2 id="verify-recovery">Verify recovery yourself</h2>
+  <p>
+    A wallet backup is only useful if it actually restores. This check proves the core claim on testnet in a few minutes:
+    the 12-word phrase alone is enough to rebuild the same Stellar account and withdraw a time-lock vault after it unlocks,
+    from a fresh process that has never seen the original key. It uses the standard
+    <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md" target="_blank" rel="noopener noreferrer">SEP-0005</a>
+    path (<code>m/44'/148'/0'</code>), the same derivation the wallet uses, so the phrase works the same way in other SEP-0005 wallets.
+  </p>
+  <ol>
+    <li>Add the derivation library next to <code>common.mjs</code> from <a href="#setup">Setup</a>: <code>npm install stellar-hd-wallet</code>.</li>
+    <li>Save the script below as <code>recovery.mjs</code>.</li>
+    <li>Run <code>node recovery.mjs create</code>. This generates a throwaway 12-word <strong>testnet</strong> phrase, funds the account with Friendbot, and locks 10 XLM in the xlm_vault contract for 60 seconds.</li>
+    <li>Run <code>node recovery.mjs restore</code>. It rebuilds the key from the 12 words only, checks the address matches, finds the vault with <code>list_owned</code>, waits for the unlock time, withdraws, and prints a stellar.expert link.</li>
+    <li>Delete <code>testnet-phrase.txt</code> when you are done.</li>
+  </ol>
+  <pre><code>import { readFileSync, writeFileSync } from &quot;node:fs&quot;;
+import StellarHDWallet from &quot;stellar-hd-wallet&quot;;
+import { Keypair } from &quot;@stellar/stellar-sdk&quot;;
+import { vaultClient, sleep } from &quot;./common.mjs&quot;;
+const VAULT = &quot;CBIXRLC5GQ6O5UUJFVRIWZD77P5LUVJG3XGGUVS4EWHAJ6LXQZNKH35Z&quot;;
+const XLM = 10_000_000n;
+const step = process.argv[2];
+
+if (step === &quot;create&quot;) {
+  // Throwaway TESTNET phrase only. Never do this with a real wallet&#x27;s phrase.
+  const phrase = StellarHDWallet.generateMnemonic({ entropyBits: 128 }); // 12 words
+  writeFileSync(&quot;testnet-phrase.txt&quot;, phrase, { mode: 0o600 });
+  const kp = Keypair.fromSecret(StellarHDWallet.fromMnemonic(phrase).getSecret(0)); // SEP-0005 m/44&#x27;/148&#x27;/0&#x27;
+  const r = await fetch(`https://friendbot.stellar.org?addr=${kp.publicKey()}`);
+  if (!r.ok) throw new Error(&quot;friendbot failed: &quot; + r.status);
+  const vault = await vaultClient(VAULT, kp);
+  const now = BigInt(Math.floor(Date.now() / 1000));
+  const tx = await vault.create_vault({ owner: kp.publicKey(), name: &quot;Recovery check&quot;, initial_deposit: 10n * XLM, unlock_timestamp: now + 60n });
+  const vaultId = (await tx.signAndSend()).result.unwrap();
+  console.log(&quot;address&quot;, kp.publicKey(), &quot;vault id&quot;, vaultId, &quot;unlocks in ~60 s&quot;);
+}
+
+if (step === &quot;restore&quot;) {
+  // A fresh process that only knows the 12 words, as on a new phone.
+  const phrase = readFileSync(&quot;testnet-phrase.txt&quot;, &quot;utf8&quot;).trim();
+  const kp = Keypair.fromSecret(StellarHDWallet.fromMnemonic(phrase).getSecret(0));
+  console.log(&quot;restored address&quot;, kp.publicKey());
+  const vault = await vaultClient(VAULT, kp);
+  const { result: ids } = await vault.list_owned({ owner: kp.publicKey() });
+  const vaultId = ids[ids.length - 1];
+  const v = (await vault.get_vault({ vault_id: vaultId })).result.unwrap();
+  console.log(&quot;found vault&quot;, vaultId, &quot;balance&quot;, v.balance);
+  while (BigInt(Math.floor(Date.now() / 1000)) &lt; v.unlock_timestamp + 6n) await sleep(2000);
+  const sent = await (await vault.withdraw({ caller: kp.publicKey(), vault_id: vaultId })).signAndSend();
+  const hash = sent.sendTransactionResponse?.hash;
+  console.log(&quot;withdrawn, tx&quot;, `https://stellar.expert/explorer/testnet/tx/${hash}`);
+}
+</code></pre>
+  <p>
+    Use a throwaway testnet phrase only. Never put a real wallet's phrase into a script, a terminal, or a website.
+  </p>
+  <h3>Our run in the Android app (testnet)</h3>
+  <p>
+    We also ran the same check by hand in the Android app on testnet, on an emulator, with a brand-new Friendbot-funded wallet:
+  </p>
+  <ol>
+    <li>Created a wallet, wrote down the 12 words, and locked 20 XLM in a one-hour time-lock vault.</li>
+    <li>Added a contact, renamed the wallet, set the display currency to EUR, and exported an encrypted <code>.stvault</code> backup.</li>
+    <li>Wiped the app's data, then restored from the 12 words alone. We got the same address, the same balance, and the same vault.</li>
+    <li>Wiped the app again, restored from the 12 words, and imported the <code>.stvault</code> file. The contact, wallet name and EUR display currency came back.</li>
+    <li>After the unlock time, withdrew the vault from the restored wallet:
+      <a href="https://stellar.expert/explorer/testnet/tx/807d00f6010d55840a39c20b4354bbba987c5a74a5b05aed76bceac74599ebaf" target="_blank" rel="noopener noreferrer">testnet transaction 807d00f6…99ebaf</a>.</li>
+  </ol>
+  <p class="recovery-shots" style="display:flex;flex-wrap:wrap;gap:12px;">
+    <img src="img/recovery-1-vault-locked.webp" width="300" height="622" loading="lazy" alt="Testnet time-lock vault holding 20 XLM, locked" style="max-width:31%;height:auto;border-radius:10px;" />
+    <img src="img/recovery-2-restored-home.webp" width="300" height="622" loading="lazy" alt="Home screen after restoring from the phrase and importing the backup: same address, contact and vault" style="max-width:31%;height:auto;border-radius:10px;" />
+    <img src="img/recovery-3-currency-restored.webp" width="300" height="622" loading="lazy" alt="Settings after the backup import: display currency restored to EUR" style="max-width:31%;height:auto;border-radius:10px;" />
+  </p>
+  <p>
+    Note that the <code>.stvault</code> file is not a replacement for the 12 words: it holds contacts, saved keys and settings, and it only imports into a wallet restored from the same phrase.
   </p>
 
   <h2 id="sep7">SEP-7 <code>web+stellar:pay</code> links</h2>
