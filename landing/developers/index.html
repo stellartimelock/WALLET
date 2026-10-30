@@ -3,9 +3,188 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Developer Guide — Stellar TimeLock</title>
-  <meta name="description" content="Copy-paste @stellar/stellar-sdk examples: payments with memos, Stellar TimeLock vault contracts (time lock, cooling-off, vesting) on testnet, and SEP-7 pay links." />
+  <title>Soroban Time Lock &amp; Vesting Examples | Stellar TimeLock</title>
+  <meta name="description" content="Working @stellar/stellar-sdk examples for building on Stellar: Soroban time-lock, cooling-off and vesting vault contracts, transaction time bounds, claimable balance time predicates, memos and SEP-7 links. Every sample runs on testnet." />
   <link rel="canonical" href="https://stellartimelock.com/developers/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Stellar TimeLock" />
+  <meta property="og:url" content="https://stellartimelock.com/developers/" />
+  <meta property="og:title" content="Soroban time lock &amp; vesting examples for Stellar developers" />
+  <meta property="og:description" content="Copy-paste @stellar/stellar-sdk code for Soroban time-lock and vesting vaults, transaction time bounds and claimable balance predicates. Tested on testnet." />
+  <meta property="og:image" content="https://stellartimelock.com/assets/logo.png" />
+  <meta property="og:image:alt" content="Stellar TimeLock logo" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@StellarTimeLock" />
+  <meta name="twitter:title" content="Soroban time lock &amp; vesting examples for Stellar developers" />
+  <meta name="twitter:description" content="Copy-paste @stellar/stellar-sdk code for Soroban time-lock and vesting vaults, transaction time bounds and claimable balance predicates. Tested on testnet." />
+  <meta name="twitter:image" content="https://stellartimelock.com/assets/logo.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://stellartimelock.com/developers/#guide",
+      "headline": "Soroban time lock and vesting examples for Stellar developers",
+      "description": "Working @stellar/stellar-sdk examples for building on Stellar: Soroban time-lock, cooling-off and vesting vault contracts, transaction time bounds, claimable balance time predicates, memos and SEP-7 links. Every sample runs on testnet.",
+      "url": "https://stellartimelock.com/developers/",
+      "mainEntityOfPage": "https://stellartimelock.com/developers/",
+      "inLanguage": "en",
+      "dateModified": "2026-10-30",
+      "proficiencyLevel": "Beginner",
+      "dependencies": "@stellar/stellar-sdk 17.x, Node.js 18+",
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "Soroban smart contracts"
+        },
+        {
+          "@type": "Thing",
+          "name": "Stellar Lumens (XLM)"
+        },
+        {
+          "@type": "Thing",
+          "name": "Time lock"
+        },
+        {
+          "@type": "Thing",
+          "name": "Token vesting"
+        },
+        {
+          "@type": "Thing",
+          "name": "Stellar transaction time bounds"
+        },
+        {
+          "@type": "Thing",
+          "name": "Claimable balances"
+        }
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "StellarTimeLock, LLC",
+        "url": "https://stellartimelock.com/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "StellarTimeLock, LLC",
+        "url": "https://stellartimelock.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://stellartimelock.com/assets/logo.png"
+        }
+      },
+      "image": "https://stellartimelock.com/assets/logo.png",
+      "isBasedOn": "https://github.com/stellartimelock/stellartimelock-wallet"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Stellar TimeLock",
+      "operatingSystem": "Android",
+      "applicationCategory": "FinanceApplication",
+      "url": "https://stellartimelock.com/",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "downloadUrl": [
+        "https://play.google.com/store/apps/details?id=com.stellartimelock",
+        "https://stellartimelock.com/fdroid/repo"
+      ],
+      "installUrl": "https://stellartimelock.com/fdroid/",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "codeRepository": "https://github.com/stellartimelock/stellartimelock-wallet"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Stellar TimeLock",
+          "item": "https://stellartimelock.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Developers",
+          "item": "https://stellartimelock.com/developers/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I time-lock XLM on Stellar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three ways. A Soroban smart contract such as the xlm_vault contract on this page holds the XLM and refuses withdraw() until the unlock timestamp. A claimable balance with a NOT(BEFORE_ABSOLUTE_TIME) predicate lets the listed claimant claim only after a set time. Pre-signed transactions with a minTime time bound can also release funds later, but they need careful sequence-number and signer setup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are transaction time bounds on Stellar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Time bounds are an optional minTime and maxTime (Unix seconds, checked against ledger close time) on a Stellar transaction. Submitted before minTime it fails with tx_too_early; after maxTime it fails with tx_too_late. In @stellar/stellar-sdk, setTimeout(seconds) sets maxTime and setTimebounds(min, max) sets both; a value of 0 means no bound."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between time bounds and a time lock?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Time bounds limit when a signed transaction may be included in a ledger; they don't hold any funds, and the account can still spend its balance with another transaction. A time lock holds the funds: a claimable balance predicate or a Soroban contract enforces that nobody can move them before the unlock time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a claimable balance lock XLM until a date?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Create the claimable balance with the claimant's predicate set to NOT(BEFORE_ABSOLUTE_TIME(unlock time)); claimClaimableBalance fails with op_cannot_claim until then. The creator can list their own account as a claimant to lock funds for themselves. Predicates can't express cooling-off periods or linear vesting; that needs a Soroban contract."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I build a vesting schedule on Stellar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use a Soroban contract that releases tokens linearly between a start and end timestamp. The multi_asset_vault_v2 testnet contract on this page does that: create_vesting_vault, read get_unlocked_amount, then withdraw_vested. For a schedule you write yourself, the official soroban-examples timelock contract is a good starting point."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I call a Soroban smart contract from JavaScript?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With @stellar/stellar-sdk, contract.Client.from({ contractId, rpcUrl, networkPassphrase, publicKey, signTransaction }) loads the contract's interface from the network, so you can call its functions by name and then signAndSend() the transaction. contract.basicNodeSigner gives you signTransaction for a Keypair in Node."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where do I start building Soroban smart contracts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Install Rust and the Stellar CLI, then follow the Hello World guide on developers.stellar.org (stellar contract init, stellar contract build, deploy to testnet). The stellar/soroban-examples repository has small reference contracts, including a timelock. This page shows how to call deployed time-lock and vesting contracts from a JavaScript app."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the Stellar TimeLock source code public?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Android wallet is source available under GPL-3.0 at github.com/stellartimelock/stellartimelock-wallet. Contract IDs and WASM hashes are listed there in CONTRACT_REFERENCE.md. The vault contract source is not published, and no third-party audit is claimed, so test on testnet before relying on any contract."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
   <meta name="theme-color" content="#05070d" />
   <link rel="icon" type="image/png" href="../assets/logo.png" />
   <link rel="stylesheet" href="../assets/style.css" />
@@ -70,13 +249,15 @@
 </header>
 
 <main class="legal">
-  <h1>Developer Guide</h1>
+  <h1>Developer Guide: Soroban time locks, vesting and time bounds</h1>
   <p class="legal-lede">
-    Copy-paste examples for building on Stellar with <code>@stellar/stellar-sdk</code> 17.x, including the
-    same vault contracts the Stellar TimeLock wallet uses. Every sample below was run against Stellar testnet.
+    Copy-paste examples for building on Stellar with <code>@stellar/stellar-sdk</code> 17.x: call the same Soroban
+    smart contracts the Stellar TimeLock wallet uses to time-lock XLM (Stellar Lumens), add cooling-off withdrawals
+    and vesting schedules, and use Stellar's built-in transaction time bounds and claimable balance predicates.
+    Every sample below was run against Stellar testnet.
   </p>
   <p class="toc">
-    <a href="#setup">Setup</a><a href="#payment">Payment with memo</a><a href="#timelock">Time-lock vault</a><a href="#cooling">Cooling-off &amp; vesting</a><a href="#sep7">SEP-7 pay links</a>
+    <a href="#setup">Setup</a><a href="#payment">Payment with memo</a><a href="#timelock">Time-lock vault</a><a href="#cooling">Cooling-off &amp; vesting</a><a href="#timebounds">Time bounds vs. time locks</a><a href="#sep7">SEP-7 pay links</a><a href="#faq">FAQ</a>
   </p>
   <p>
     The wallet is source available at
@@ -196,6 +377,79 @@ await (await v2.withdraw_vested({ caller: me, vault_id: vestId, amount: claimabl
 const vv = (await v2.get_vault({ vault_id: vestId })).result.unwrap();
 console.log(&quot;withdrawn_so_far&quot;, vv.withdrawn_so_far, &quot;of&quot;, vv.total_locked_amount);</code></pre>
 
+  <h2 id="timebounds">Time bounds vs. time-lock vaults</h2>
+  <p>
+    Stellar has three different "wait until" tools, and they are easy to mix up:
+  </p>
+  <ul>
+    <li><strong>Transaction time bounds</strong> (<code>minTime</code> / <code>maxTime</code>) limit when one signed
+      transaction can make it into a ledger. Too early fails with <code>tx_too_early</code>, too late with
+      <code>tx_too_late</code>. They hold no funds: the account can still spend its balance in another transaction.
+      <code>setTimeout()</code> sets <code>maxTime</code>; <code>setTimebounds(min, max)</code> sets both (0 = no bound).</li>
+    <li><strong>Claimable balance predicates</strong> move funds into a ledger entry that only the listed claimants can
+      claim, when a predicate is true. <code>NOT(BEFORE_ABSOLUTE_TIME(t))</code> means "claimable from <code>t</code>",
+      and early claims fail with <code>op_cannot_claim</code>. No contract needed, but no cooling-off or vesting logic.</li>
+    <li><strong>Soroban time-lock contracts</strong> such as <a href="#timelock">xlm_vault</a> hold the funds and enforce
+      any rule you can code: extend-only locks, <a href="#cooling">cooling-off withdrawals and linear vesting</a>,
+      lists of vaults per owner.</li>
+  </ul>
+  <p>This sample shows the first two: a payment that is rejected before its <code>minTime</code> and accepted after, and
+    a claimable balance that Bob can only claim after the unlock time.</p>
+  <pre><code>import { Horizon, TransactionBuilder, Operation, Asset, Claimant, BASE_FEE } from &quot;@stellar/stellar-sdk&quot;;
+import { fundedKeypair, NETWORK, sleep } from &quot;./common.mjs&quot;;
+const horizon = new Horizon.Server(&quot;https://horizon-testnet.stellar.org&quot;);
+const alice = await fundedKeypair();
+const bob = await fundedKeypair();
+const now = () =&gt; Math.floor(Date.now() / 1000);
+const why = (e) =&gt; JSON.stringify(e?.response?.data?.extras?.result_codes ?? e.message);
+
+// 1) Transaction time bounds: this payment is only valid between minTime and maxTime.
+const minTime = now() + 15, maxTime = now() + 300;
+const tx = new TransactionBuilder(await horizon.loadAccount(alice.publicKey()), { fee: BASE_FEE, networkPassphrase: NETWORK })
+  .addOperation(Operation.payment({ destination: bob.publicKey(), asset: Asset.native(), amount: &quot;1&quot; }))
+  .setTimebounds(minTime, maxTime) // use instead of setTimeout(); 0 = no bound
+  .build();
+tx.sign(alice);
+try { await horizon.submitTransaction(tx); console.log(&quot;EARLY TX ACCEPTED?!&quot;); }
+catch (e) { console.log(&quot;submitted early:&quot;, why(e)); } // {&quot;transaction&quot;:&quot;tx_too_early&quot;}
+while (now() &lt; minTime + 6) await sleep(2000);
+console.log(&quot;same signed tx after minTime:&quot;, (await horizon.submitTransaction(tx)).successful);
+
+// 2) Claimable balance with a time predicate: Bob can claim only after unlockAt.
+const unlockAt = now() + 20;
+const cbTx = new TransactionBuilder(await horizon.loadAccount(alice.publicKey()), { fee: BASE_FEE, networkPassphrase: NETWORK })
+  .addOperation(Operation.createClaimableBalance({
+    asset: Asset.native(),
+    amount: &quot;5&quot;,
+    claimants: [new Claimant(bob.publicKey(), Claimant.predicateNot(Claimant.predicateBeforeAbsoluteTime(String(unlockAt))))],
+  }))
+  .setTimeout(60)
+  .build();
+cbTx.sign(alice);
+await horizon.submitTransaction(cbTx);
+const balanceId = cbTx.getClaimableBalanceId(0);
+console.log(&quot;claimable balance&quot;, balanceId);
+const claim = async () =&gt; {
+  const t = new TransactionBuilder(await horizon.loadAccount(bob.publicKey()), { fee: BASE_FEE, networkPassphrase: NETWORK })
+    .addOperation(Operation.claimClaimableBalance({ balanceId }))
+    .setTimeout(60)
+    .build();
+  t.sign(bob);
+  return horizon.submitTransaction(t);
+};
+try { await claim(); console.log(&quot;EARLY CLAIM WORKED?!&quot;); }
+catch (e) { console.log(&quot;claimed early:&quot;, why(e)); } // op_cannot_claim
+while (now() &lt; unlockAt + 6) await sleep(2000);
+console.log(&quot;claimed after unlock:&quot;, (await claim()).successful);</code></pre>
+  <p>
+    Writing your own contract instead? Start with the official
+    <a href="https://developers.stellar.org/docs/build/smart-contracts/example-contracts/timelock" target="_blank" rel="noopener noreferrer">Soroban timelock example</a>
+    and the <a href="https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world" target="_blank" rel="noopener noreferrer">Hello World guide</a>
+    on developers.stellar.org, and see the
+    <a href="https://developers.stellar.org/docs/build/guides/transactions/claimable-balances" target="_blank" rel="noopener noreferrer">claimable balances guide</a>
+    for every predicate type.
+  </p>
+
   <h2 id="sep7">SEP-7 <code>web+stellar:pay</code> links</h2>
   <p>
     A <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0007.md" target="_blank" rel="noopener noreferrer">SEP-7</a>
@@ -220,7 +474,26 @@ const link = payLink({ destination: &quot;GAEPPLTQ4OIBG4J6DSI33FDYBB7YCKWOT36DNV
 console.log(link);
 console.log(parsePayLink(link));</code></pre>
 
-  <p class="legal-meta"><em>Last updated: October 29, 2026. Testnet contract IDs can change when testnet resets.</em></p>
+
+  <h2 id="faq">FAQ</h2>
+  <h3>How do I time-lock XLM on Stellar?</h3>
+  <p>Three ways. A Soroban smart contract such as the xlm_vault contract on this page holds the XLM and refuses withdraw() until the unlock timestamp. A claimable balance with a NOT(BEFORE_ABSOLUTE_TIME) predicate lets the listed claimant claim only after a set time. Pre-signed transactions with a minTime time bound can also release funds later, but they need careful sequence-number and signer setup.</p>
+  <h3>What are transaction time bounds on Stellar?</h3>
+  <p>Time bounds are an optional minTime and maxTime (Unix seconds, checked against ledger close time) on a Stellar transaction. Submitted before minTime it fails with tx_too_early; after maxTime it fails with tx_too_late. In @stellar/stellar-sdk, setTimeout(seconds) sets maxTime and setTimebounds(min, max) sets both; a value of 0 means no bound.</p>
+  <h3>What is the difference between time bounds and a time lock?</h3>
+  <p>Time bounds limit when a signed transaction may be included in a ledger; they don&#x27;t hold any funds, and the account can still spend its balance with another transaction. A time lock holds the funds: a claimable balance predicate or a Soroban contract enforces that nobody can move them before the unlock time.</p>
+  <h3>Can a claimable balance lock XLM until a date?</h3>
+  <p>Yes. Create the claimable balance with the claimant&#x27;s predicate set to NOT(BEFORE_ABSOLUTE_TIME(unlock time)); claimClaimableBalance fails with op_cannot_claim until then. The creator can list their own account as a claimant to lock funds for themselves. Predicates can&#x27;t express cooling-off periods or linear vesting; that needs a Soroban contract.</p>
+  <h3>How do I build a vesting schedule on Stellar?</h3>
+  <p>Use a Soroban contract that releases tokens linearly between a start and end timestamp. The multi_asset_vault_v2 testnet contract on this page does that: create_vesting_vault, read get_unlocked_amount, then withdraw_vested. For a schedule you write yourself, the official soroban-examples timelock contract is a good starting point.</p>
+  <h3>How do I call a Soroban smart contract from JavaScript?</h3>
+  <p>With @stellar/stellar-sdk, contract.Client.from({ contractId, rpcUrl, networkPassphrase, publicKey, signTransaction }) loads the contract&#x27;s interface from the network, so you can call its functions by name and then signAndSend() the transaction. contract.basicNodeSigner gives you signTransaction for a Keypair in Node.</p>
+  <h3>Where do I start building Soroban smart contracts?</h3>
+  <p>Install Rust and the Stellar CLI, then follow the Hello World guide on developers.stellar.org (stellar contract init, stellar contract build, deploy to testnet). The stellar/soroban-examples repository has small reference contracts, including a timelock. This page shows how to call deployed time-lock and vesting contracts from a JavaScript app.</p>
+  <h3>Is the Stellar TimeLock source code public?</h3>
+  <p>The Android wallet is source available under GPL-3.0 at github.com/stellartimelock/stellartimelock-wallet. Contract IDs and WASM hashes are listed there in CONTRACT_REFERENCE.md. The vault contract source is not published, and no third-party audit is claimed, so test on testnet before relying on any contract.</p>
+
+  <p class="legal-meta"><em>Last updated: October 30, 2026. Testnet contract IDs can change when testnet resets.</em></p>
   <p><a href="../">← Back to home</a></p>
 </main>
 

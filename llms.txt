@@ -4,11 +4,13 @@
 
 Stellar TimeLock lets users lock XLM and other Stellar assets in Soroban smart contracts until a chosen unlock time. Features include standard time-locks, cooling-off periods, vesting schedules, dead man's switch vaults, multi-sig, HTLC, multi-asset support, and optional swap.
 
-This GitHub repository is a **public security and legal reference**. It does not contain the full Android app source or complete vault contract source (proprietary by design). It documents contract addresses, network endpoints, privacy/terms/disclosures, security modules/excerpts, and how to verify the app's non-custodial design.
+This GitHub repository is a **public security and legal reference**. The Android app source is published separately as source available (GPL-3.0) at https://github.com/stellartimelock/stellartimelock-wallet; the vault contract source is not published. It documents contract addresses, network endpoints, privacy/terms/disclosures, security modules/excerpts, and how to verify the app's non-custodial design.
 
 ## Site
 
 - Product site: https://stellartimelock.com
+- Developer guide: https://stellartimelock.com/developers/
+- Site llms.txt: https://stellartimelock.com/llms.txt
 - Contact: StellarTimeLock@gmail.com
 
 ## Key docs in this repo
