@@ -1,0 +1,36 @@
+# Stellar TimeLock
+
+> Non-custodial Android wallet and developer guide for time-locking XLM (Stellar Lumens) and other Stellar assets with Soroban smart contracts: time-lock vaults, cooling-off withdrawals and vesting schedules. The wallet is source available under GPL-3.0.
+
+The developer guide has working @stellar/stellar-sdk 17.x (JavaScript) examples, each run against Stellar testnet. It also explains how Soroban time-lock contracts differ from Stellar transaction time bounds (minTime/maxTime) and claimable balance time predicates. No third-party audit is claimed. Nothing on this site is financial advice.
+
+## Developer docs
+
+- [Developer guide](https://stellartimelock.com/developers/): setup, payments with memos, Soroban time-lock vault, cooling-off and vesting vaults, time bounds vs. time locks, SEP-7 pay links, FAQ
+- [Time-lock vault example (xlm_vault)](https://stellartimelock.com/developers/#timelock): create_vault, deposit, extend_lock, withdraw, get_vault, list_owned
+- [Cooling-off and vesting example (multi_asset_vault_v2)](https://stellartimelock.com/developers/#cooling): create_cooling_off_vault, initiate_withdrawal, create_vesting_vault, get_unlocked_amount, withdraw_vested
+- [Time bounds vs. time-lock vaults](https://stellartimelock.com/developers/#timebounds): setTimebounds, tx_too_early, claimable balance NOT(BEFORE_ABSOLUTE_TIME) predicates
+- [Developer FAQ](https://stellartimelock.com/developers/#faq)
+
+## Contracts
+
+- xlm_vault, testnet: CBIXRLC5GQ6O5UUJFVRIWZD77P5LUVJG3XGGUVS4EWHAJ6LXQZNKH35Z
+- xlm_vault, mainnet: CCWDMIPD4ZTTIV5LR53PD325MS6VRGF3WJEJRKNCIKK3G7H6AXJ3UE4F
+- multi_asset_vault_v2, testnet: CAHAQAN6KYAQCJ34W6CVZJGMWRXKCZFHM32F37E4EFEIIC4636TD74BV
+- multi_asset_vault_v2, mainnet: CAPXQVGAD2TZNEDKZZDX3YKUBHQ2UI2XDI5AND6Z35D2YY2NZ7AJV6LM
+- [Contract reference with WASM hashes](https://github.com/stellartimelock/stellartimelock-wallet/blob/main/CONTRACT_REFERENCE.md)
+
+## Source and downloads
+
+- [Wallet source (GPL-3.0, source available)](https://github.com/stellartimelock/stellartimelock-wallet)
+- [Security and legal reference](https://github.com/stellartimelock/WALLET)
+- [Google Play](https://play.google.com/store/apps/details?id=com.stellartimelock)
+- [F-Droid repo page](https://stellartimelock.com/fdroid/) (repo URL https://stellartimelock.com/fdroid/repo, fingerprint B93F0F85E1AA147B646A36F415F87EF49BF14E9FA9FABEE0F1BA4C48B7B8B1DE)
+
+## Optional
+
+- [Home](https://stellartimelock.com/)
+- [Privacy](https://stellartimelock.com/privacy/)
+- [Terms](https://stellartimelock.com/terms/)
+- [Disclosures](https://stellartimelock.com/disclosures/)
+- Contact: StellarTimeLock@gmail.com

@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Stellar TimeLock — Non-Custodial Time-Lock Wallets on Stellar</title>
-  <meta name="description" content="Stellar TimeLock is a non-custodial Stellar wallet with Time-Lock vaults, Cooling-Off locks, Vesting schedules, Multi-Asset support, and on-device Swap. Your keys never leave your device." />
-  <meta name="keywords" content="Stellar TimeLock, Stellar wallet, time-lock vault, cooling-off, vesting, multi-asset, Soroban, non-custodial, self-custody, XLM" />
+  <title>Stellar TimeLock — Soroban Time-Lock Vaults for XLM on Stellar</title>
+  <meta name="description" content="Non-custodial Android wallet that locks XLM (Stellar Lumens) and other Stellar assets in Soroban smart contracts: time-lock vaults, cooling-off withdrawals and vesting schedules. Source available, on Google Play and F-Droid, with a developer guide." />
+  <meta name="keywords" content="Stellar TimeLock, Soroban smart contracts, XLM time lock, Stellar Lumens, vesting, cooling-off, Stellar wallet, non-custodial" />
   <meta name="author" content="StellarTimeLock, LLC" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#05070d" />
@@ -15,7 +15,7 @@
   <meta property="og:description" content="Non-custodial Time-Lock vaults, Cooling-Off, Vesting, Multi-Asset, and Swap on Stellar. No custody. No admin. Your keys, your device." />
   <meta property="og:image" content="https://stellartimelock.com/assets/logo.png" />
   <meta property="og:image:alt" content="Stellar TimeLock logo" />
-  <meta property="og:url" content="https://stellartimelock.com" />
+  <meta property="og:url" content="https://stellartimelock.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Stellar TimeLock" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -38,7 +38,13 @@
         "name": "Stellar TimeLock",
         "operatingSystem": "Android",
         "applicationCategory": "FinanceApplication",
-        "description": "Non-custodial Stellar wallet with Time-Lock vaults, Cooling-Off locks, Vesting schedules, Multi-Asset support, and on-device Swap.",
+        "description": "Non-custodial Android wallet that locks XLM and other Stellar assets in Soroban smart contracts: time-lock vaults, cooling-off withdrawals and vesting schedules.",
+        "softwareVersion": "1.6.19",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "isAccessibleForFree": true,
+        "installUrl": "https://stellartimelock.com/fdroid/",
+        "softwareHelp": "https://stellartimelock.com/developers/",
+        "codeRepository": "https://github.com/stellartimelock/stellartimelock-wallet",
         "url": "https://stellartimelock.com",
         "publisher": {
           "@type": "Organization",
@@ -50,9 +56,10 @@
           "price": "0",
           "priceCurrency": "USD"
         },
-        "downloadUrl": "https://play.google.com/store/apps/details?id=com.stellartimelock",
+        "downloadUrl": ["https://play.google.com/store/apps/details?id=com.stellartimelock", "https://stellartimelock.com/fdroid/repo"],
         "sameAs": [
           "https://github.com/stellartimelock/WALLET",
+          "https://github.com/stellartimelock/stellartimelock-wallet",
           "https://play.google.com/store/apps/details?id=com.stellartimelock",
           "https://x.com/StellarTimeLock",
           "https://www.instagram.com/StellarTimeLock/",
@@ -102,7 +109,15 @@
             "name": "Where can I review the security reference?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Security modules and excerpts, contract IDs, and legal docs are published in the WALLET repository. Full app backend and complete vault contract source remain proprietary. Contract addresses are verifiable on-chain. Responsible disclosures are welcome."
+              "text": "The Android wallet is source available under GPL-3.0 at github.com/stellartimelock/stellartimelock-wallet. Contract IDs, WASM hashes and legal docs are public too. The vault contract source isn't published, but the deployed contracts can be checked on-chain. Responsible disclosures are welcome."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can developers build on the same vault contracts?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The developer guide at stellartimelock.com/developers/ has @stellar/stellar-sdk examples for the time-lock, cooling-off and vesting vault contracts on testnet, plus Stellar transaction time bounds and claimable balance time predicates."
             }
           }
         ]
@@ -191,8 +206,8 @@
       <a class="cta cta-ghost" href="fdroid/">
         Get it on F-Droid (our repo)
       </a>
-      <a class="cta cta-ghost" href="https://github.com/stellartimelock/WALLET" target="_blank" rel="noopener noreferrer">
-        Audit the contracts →
+      <a class="cta cta-ghost" href="developers/">
+        Developer guide →
       </a>
     </div>
 
@@ -294,7 +309,7 @@
       <li class="feature">
         <div class="feature-icon">📜</div>
         <h3>Public security reference</h3>
-        <p>Security modules/excerpts, docs, and on-chain contract IDs are published for review. Full app backend and complete vault source stay proprietary by design.</p>
+        <p>The Android app is source available (GPL-3.0). Security docs and on-chain contract IDs are published for review; the vault contract source is not.</p>
       </li>
     </ul>
   </section>
@@ -305,10 +320,10 @@
         <span class="security-eyebrow">SECURITY</span>
         <h2 class="section-title security-title">Security you can inspect</h2>
         <p class="security-copy">
-          Stellar TimeLock is a non-custodial wallet. Security modules and excerpts,
-          legal docs, and on-chain contract IDs are published for review in our
-          WALLET repository. Full app backend and complete vault contract source
-          remain proprietary.
+          Stellar TimeLock is a non-custodial wallet. The Android app is source
+          available under GPL-3.0, and security docs, legal docs and on-chain
+          contract IDs are published for review. The vault contract source is not
+          published; the deployed contracts can be checked on-chain.
         </p>
       </div>
       <ul class="security-list">
@@ -393,11 +408,27 @@
         </summary>
         <div class="faq-body">
           <p>
-            Security modules and excerpts, contract IDs, and legal docs are in
+            The Android wallet is source available under GPL-3.0 at
+            <a href="https://github.com/stellartimelock/stellartimelock-wallet" target="_blank" rel="noopener noreferrer">stellartimelock-wallet</a>.
+            Contract IDs, WASM hashes and legal docs are in
             <a href="https://github.com/stellartimelock/WALLET" target="_blank" rel="noopener noreferrer">WALLET</a>.
-            Full app backend and complete vault contract source remain proprietary.
+            The vault contract source isn't published.
             On-chain contract addresses are verifiable on Stellar explorers.
             Responsible disclosures: <a href="mailto:StellarTimeLock@gmail.com">StellarTimeLock@gmail.com</a>.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>Can developers build on the same vault contracts?</span>
+          <span class="faq-chev" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-body">
+          <p>
+            Yes. The <a href="developers/">developer guide</a> has <code>@stellar/stellar-sdk</code>
+            examples for the time-lock, cooling-off and vesting vault contracts on testnet,
+            plus Stellar transaction time bounds and claimable balance time predicates.
           </p>
         </div>
       </details>
