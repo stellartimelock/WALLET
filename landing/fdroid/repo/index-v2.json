@@ -14,7 +14,7 @@
       }
     },
     "address": "https://stellartimelock.com/fdroid/repo",
-    "timestamp": 1793327454000,
+    "timestamp": 1793652815000,
     "categories": {
       "Money": {
         "name": {
@@ -26,13 +26,13 @@
   "packages": {
     "com.stellartimelock": {
       "metadata": {
-        "added": 1793327453000,
+        "added": 1793652815000,
         "categories": [
           "Money"
         ],
         "changelog": "https://github.com/stellartimelock/stellartimelock-wallet/blob/HEAD/CHANGELOG.md",
         "issueTracker": "https://github.com/stellartimelock/stellartimelock-wallet/issues",
-        "lastUpdated": 1793327453000,
+        "lastUpdated": 1793652815000,
         "license": "GPL-3.0-or-later",
         "sourceCode": "https://github.com/stellartimelock/stellartimelock-wallet",
         "webSite": "https://stellartimelock.com",
@@ -68,19 +68,19 @@
         "preferredSigner": "b93f0f85e1aa147b646a36f415f87ef49bf14e9fa9fabee0f1ba4c48b7b8b1de"
       },
       "versions": {
-        "6cc0486996a8c76e9e4e16c339659b098ac02a6c6da6e7f158b596c8a008a56c": {
-          "added": 1793327453000,
+        "46f0caa50b15a785b02c70d0f567001ab1aee2a77fd8bbdfd9654a5aacee6d03": {
+          "added": 1793652815000,
           "file": {
-            "name": "/com.stellartimelock_30.apk",
-            "sha256": "6cc0486996a8c76e9e4e16c339659b098ac02a6c6da6e7f158b596c8a008a56c",
-            "size": 31280280
+            "name": "/com.stellartimelock_31.apk",
+            "sha256": "46f0caa50b15a785b02c70d0f567001ab1aee2a77fd8bbdfd9654a5aacee6d03",
+            "size": 31309120
           },
           "manifest": {
             "nativecode": [
               "arm64-v8a"
             ],
-            "versionName": "1.6.19",
-            "versionCode": 30,
+            "versionName": "1.6.20",
+            "versionCode": 31,
             "usesSdk": {
               "minSdkVersion": 24,
               "targetSdkVersion": 36
