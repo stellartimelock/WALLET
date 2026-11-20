@@ -200,8 +200,10 @@ a:hover { color: #4ecdc4; }
   font-size: clamp(36px, 6vw, 56px);
   font-weight: 900;
   letter-spacing: -0.5px;
+  line-height: 1.15;
   margin: 0 0 12px;
-  min-height: 1.1em;
+  min-height: 2.4em;
+  text-wrap: balance;
 }
 .cursor {
   display: inline-block;

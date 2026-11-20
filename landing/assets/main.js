@@ -3,7 +3,7 @@
  *   - Fade-in for the tagline after the title finishes.
  */
 (function () {
-  var TITLE = "Stellar TimeLock";
+  var TITLE = "Lock your crypto until a date you choose.";
   var TYPE_MS = 70;
   var titleEl = document.getElementById("typed-title");
   var cursorEl = document.getElementById("cursor");
