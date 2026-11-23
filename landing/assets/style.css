@@ -1235,3 +1235,13 @@ a:hover { color: #4ecdc4; }
 
 /* Non-clickable "Coming soon to Google Play" badge (see assets/play-status.js) */
 .play-soon { cursor: default; opacity: .75; pointer-events: none; }
+
+/* ---------------- Smart contracts + v2 ---------------- */
+.contracts-section, .v2-section { padding-top: 24px; }
+.contract-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  word-break: break-all;
+  color: var(--teal);
+}
+.contracts-cta { justify-content: center; margin-top: 24px; }

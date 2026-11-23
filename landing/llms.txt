@@ -10,11 +10,22 @@ No third-party audit is claimed. Nothing on this site is financial advice.
 - xlm_vault, mainnet: CCWDMIPD4ZTTIV5LR53PD325MS6VRGF3WJEJRKNCIKK3G7H6AXJ3UE4F
 - multi_asset_vault_v2, testnet: CAHAQAN6KYAQCJ34W6CVZJGMWRXKCZFHM32F37E4EFEIIC4636TD74BV
 - multi_asset_vault_v2, mainnet: CAPXQVGAD2TZNEDKZZDX3YKUBHQ2UI2XDI5AND6Z35D2YY2NZ7AJV6LM
+- htlc, mainnet: CDPWT5VY4YFBUKUTZ7LKQNQ3FVJE5VSKJJD4LFBLUY4VSYYSHKAUTRCH
+- flexible_vesting, testnet only: CA7F6IZ57GRNPJZO235Z6PG4EHXN7YV72FA6TLF4WKR2RM4QO5BKF6CM
+
+Source for htlc and flexible_vesting (GPL-3.0): https://github.com/stellartimelock/stellartimelock-contracts
+Contract list: https://stellartimelock.com/contracts/
 
 ## Downloads and reference
 
 - [Security and legal reference](https://github.com/stellartimelock/WALLET)
 - [Google Play](https://play.google.com/store/apps/details?id=com.stellartimelock)
+
+## Coming soon (v2)
+
+- Flexible Vesting: skip today, double today, optional wait before a double
+- XRP Ledger and Solana in the same wallet, including XRP escrow locks and SOL stake lockups
+- USDC moves between Stellar and Solana with Circle CCTP V2
 
 ## Optional
 

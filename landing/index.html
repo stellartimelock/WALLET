@@ -6,7 +6,7 @@
 
   <title>Lock crypto until a date you choose | StellarTimeLock</title>
   <meta name="description" content="A non-custodial Android wallet that locks your XLM or any Stellar token until a date you set. Vesting, cooling-off and vaults enforced onchain." />
-  <meta name="keywords" content="Stellar TimeLock, Soroban smart contracts, XLM time lock, Stellar Lumens, vesting, cooling-off, Stellar wallet, non-custodial" />
+  <meta name="keywords" content="Stellar TimeLock, Soroban smart contracts, Stellar time lock, XLM time lock, flexible vesting, HTLC, Stellar Lumens, vesting, cooling-off, Stellar wallet, non-custodial" />
   <meta name="author" content="StellarTimeLock, LLC" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#05070d" />
@@ -55,6 +55,7 @@
         "downloadUrl": "https://play.google.com/store/apps/details?id=com.stellartimelock",
         "sameAs": [
           "https://github.com/stellartimelock/WALLET",
+          "https://github.com/stellartimelock/stellartimelock-contracts",
           "https://play.google.com/store/apps/details?id=com.stellartimelock",
           "https://x.com/StellarTimeLock",
           "https://www.instagram.com/StellarTimeLock/",
@@ -128,7 +129,7 @@
             "name": "Where can I review the security reference?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Security docs, legal docs, contract IDs and WASM hashes are in the public security reference at github.com/stellartimelock/WALLET. The vault contract source isn't published, but the deployed contracts can be checked on-chain. Responsible disclosures are welcome."
+              "text": "Security docs, legal docs, contract IDs and WASM hashes are in the public security reference at github.com/stellartimelock/WALLET. The source for the Flexible Vesting and HTLC Soroban contracts is public at github.com/stellartimelock/stellartimelock-contracts under GPL-3.0. The source for the original vault contracts isn't published, but the deployed contracts can be checked on-chain. Responsible disclosures are welcome."
             }
           },
           {
@@ -136,7 +137,7 @@
             "name": "Can developers build on the same vault contracts?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The vault contracts are on Stellar and can be called with a Stellar or Soroban SDK. Contract IDs are in the public security reference at github.com/stellartimelock/WALLET."
+              "text": "The contracts are on Stellar and can be called with a Stellar or Soroban SDK. Contract IDs are listed at stellartimelock.com/contracts/, and the Flexible Vesting and HTLC source, with tests, is at github.com/stellartimelock/stellartimelock-contracts."
             }
           }
         ]
@@ -168,6 +169,8 @@
       <a href="#features">Features</a>
       <a href="#security">Security</a>
       <a href="#faq">FAQ</a>
+      <a href="contracts/">Contracts</a>
+      <a href="#v2">v2</a>
       <a href="https://files.stellartimelock.com">FILES+</a>
       <a href="https://flipsend.stellartimelock.com">FlipSend</a>
       <a href="music/">Music</a>
@@ -321,7 +324,7 @@
       <li class="feature">
         <div class="feature-icon">📜</div>
         <h3>Public security reference</h3>
-        <p>Security docs and on-chain contract IDs are published for review; the vault contract source is not.</p>
+        <p>Security docs and on-chain contract IDs are published for review. The Flexible Vesting and HTLC contract source is public on GitHub; the original vault contract source is not.</p>
       </li>
     </ul>
   </section>
@@ -333,8 +336,9 @@
         <h2 class="section-title security-title">Security you can inspect</h2>
         <p class="security-copy">
           Stellar TimeLock is a non-custodial wallet. Security docs, legal docs
-          and on-chain contract IDs are published for review. The vault contract
-          source is not published; the deployed contracts can be checked on-chain.
+          and on-chain contract IDs are published for review. The Flexible Vesting
+          and HTLC contract source is public on GitHub. The original vault contract
+          source is not published; those deployed contracts can be checked on-chain.
         </p>
       </div>
       <ul class="security-list">
@@ -350,6 +354,62 @@
         View security reference →
       </a>
     </div>
+  </section>
+
+  <section id="contracts" class="features contracts-section">
+    <h2 class="section-title">Soroban smart contracts</h2>
+    <p class="section-lede">
+      Stellar time locks and vesting run on Soroban smart contracts. The source
+      for these two is public on GitHub under GPL-3.0, with tests.
+    </p>
+    <ul class="feature-grid">
+      <li class="feature">
+        <div class="feature-icon">📆</div>
+        <h3>Flexible Vesting <span class="soon-badge">Testnet</span></h3>
+        <p>Daily vesting with skip today and double today, enforced on-chain. Not on mainnet yet.</p>
+        <p>Testnet: <a class="contract-id" href="https://stellar.expert/explorer/testnet/contract/CA7F6IZ57GRNPJZO235Z6PG4EHXN7YV72FA6TLF4WKR2RM4QO5BKF6CM" target="_blank" rel="noopener noreferrer">CA7F6IZ57GRNPJZO235Z6PG4EHXN7YV72FA6TLF4WKR2RM4QO5BKF6CM</a></p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">🔗</div>
+        <h3>HTLC <span class="now-badge">Mainnet</span></h3>
+        <p>Hash time-locked XLM: the recipient claims with the secret before the deadline, or the sender gets a refund after it.</p>
+        <p>Mainnet: <a class="contract-id" href="https://stellar.expert/explorer/public/contract/CDPWT5VY4YFBUKUTZ7LKQNQ3FVJE5VSKJJD4LFBLUY4VSYYSHKAUTRCH" target="_blank" rel="noopener noreferrer">CDPWT5VY4YFBUKUTZ7LKQNQ3FVJE5VSKJJD4LFBLUY4VSYYSHKAUTRCH</a></p>
+      </li>
+    </ul>
+    <div class="cta-row contracts-cta">
+      <a class="cta cta-primary" href="https://github.com/stellartimelock/stellartimelock-contracts" target="_blank" rel="noopener noreferrer">View the contract source →</a>
+      <a class="cta cta-ghost" href="contracts/">All contract IDs</a>
+    </div>
+  </section>
+
+  <section id="v2" class="features v2-section">
+    <h2 class="section-title">Coming soon: v2</h2>
+    <p class="section-lede">
+      The next version of Stellar TimeLock is in development. It adds XRP and
+      Solana to the same wallet, with a switcher between XLM, XRP and SOL.
+    </p>
+    <ul class="feature-grid">
+      <li class="feature">
+        <div class="feature-icon">📆</div>
+        <h3>Flexible Vesting <span class="soon-badge">Coming soon</span></h3>
+        <p>Skip today and its share moves to the end. Double today, at most twice a week, taken from tomorrow or from the end. An optional wait before a double, set when the vest is created. Still no early withdrawal.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">💧</div>
+        <h3>XRP Ledger <span class="soon-badge">Coming soon</span></h3>
+        <p>Balance, send, receive and history for XRP, time locks with native XRP Ledger escrow, and trustlines for issued tokens.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">☀️</div>
+        <h3>Solana <span class="soon-badge">Coming soon</span></h3>
+        <p>Send and receive SOL and SPL tokens, and lock SOL with a native stake lockup.</p>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">🔁</div>
+        <h3>USDC between Stellar and Solana <span class="soon-badge">Coming soon</span></h3>
+        <p>Move USDC across chains with Circle CCTP V2, signed on your device.</p>
+      </li>
+    </ul>
   </section>
 
   <section id="faq" class="faq">
@@ -463,7 +523,9 @@
           <p>
             Security docs, legal docs, contract IDs and WASM hashes are in
             <a href="https://github.com/stellartimelock/WALLET" target="_blank" rel="noopener noreferrer">WALLET</a>.
-            The vault contract source isn't published.
+            The Flexible Vesting and HTLC contract source is public at
+            <a href="https://github.com/stellartimelock/stellartimelock-contracts" target="_blank" rel="noopener noreferrer">stellartimelock-contracts</a>
+            (GPL-3.0). The original vault contract source isn't published.
             On-chain contract addresses are verifiable on Stellar explorers.
             Responsible disclosures: <a href="mailto:StellarTimeLock@gmail.com">StellarTimeLock@gmail.com</a>.
           </p>
@@ -477,9 +539,10 @@
         </summary>
         <div class="faq-body">
           <p>
-            The vault contracts are on Stellar and can be called with a Stellar or
-            Soroban SDK. Contract IDs are in the public security reference at
-            <a href="https://github.com/stellartimelock/WALLET" target="_blank" rel="noopener noreferrer">WALLET</a>.
+            The contracts are on Stellar and can be called with a Stellar or
+            Soroban SDK. Contract IDs are on the <a href="contracts/">smart contracts page</a>,
+            and the Flexible Vesting and HTLC source, with tests, is in
+            <a href="https://github.com/stellartimelock/stellartimelock-contracts" target="_blank" rel="noopener noreferrer">stellartimelock-contracts</a>.
           </p>
         </div>
       </details>
